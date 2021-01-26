@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:calculator"
         mc:Ignorable="d"
-        Title="Калькулятор" Height="460" Width="600" MinHeight="460" MinWidth="500" MaxHeight="660" MaxWidth="900">
-    <Grid>
-      <Grid.ColumnDefinitions>
+        Title="Калькулятор" Height="460" Width="650" MinHeight="460" MinWidth="500" MaxHeight="660" MaxWidth="900">
+  <Grid Name="mainGrid">
+    <!-- ShowGridLines="True" -->
+    <Grid.ColumnDefinitions>
         <ColumnDefinition />
         <ColumnDefinition />
         <ColumnDefinition />
@@ -24,13 +25,20 @@
         <RowDefinition />
       </Grid.RowDefinitions>
         
+    <Menu Grid.ColumnSpan="2" Background="#ffffff" Height="20" VerticalAlignment="Top">
+      <MenuItem Header="Калькулятор">
+        <MenuItem Header="Обычный" Click="Standard_OnClick"/>
+        <MenuItem Header="Инжинерный" Click="Engineering_OnClick"/>
+        <MenuItem Header="Программист"/>
+      </MenuItem>
+      <MenuItem Header="Выход" Click="Exit_OnClick"/>
+    </Menu>
+    
       <Label Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Foreground="#6b6565" FontSize="20" Name="LabelExample"></Label>
         
       <Label Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" FontSize="38" Name="LabelNumber"></Label>
-        
-      <Label Grid.Column="0" Grid.Row="1" Name="Test"></Label>
       
-      <Button Background="#ffffff" Name="numberOne" Grid.Column="0" Grid.Row="6" Content="1" Uid="1" Margin="1.5" FontSize="20" Opacity="0.75" Click="Number_OnClick"></Button>
+    <Button Background="#ffffff" Name="numberOne" Grid.Column="0" Grid.Row="6" Content="1" Uid="1" Margin="1.5" FontSize="20" Opacity="0.75" Click="Number_OnClick"></Button>
       
       <Button Background="#ffffff" Name="numberTwo" Grid.Column="1" Grid.Row="6" Content="2" Uid="2" Margin="1.5" FontSize="20" Opacity="0.75" Click="Number_OnClick"></Button>
       
@@ -50,23 +58,23 @@
         
       <Button Background="#ffffff" Name="numberZero" Grid.Column="1" Grid.Row="7" Content="0" Uid="0" Margin="1.5" FontSize="20" Opacity="0.75" Click="Number_OnClick"></Button>
         
-      <Button Background="#dedcdc" Name="numberPlus" Grid.Column="3" Grid.Row="6" Content="+" Uid="+" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
+      <Button Background="#dedcdc" Name="buttonPlus" Grid.Column="3" Grid.Row="6" Content="+" Uid="+" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
       
-      <Button Background="#ffffff" Name="numberChangingSign" Grid.Column="0" Grid.Row="7" Content="+/-" Uid="+/-" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
+      <Button Background="#ffffff" Name="buttonChangingSign" Grid.Column="0" Grid.Row="7" Content="+/-" Uid="+/-" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
         
-      <Button Background="#ffffff" Name="numberPoinr" Grid.Column="2" Grid.Row="7" Content="," Uid="," Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
+      <Button Background="#ffffff" Name="buttonPoinr" Grid.Column="2" Grid.Row="7" Content="," Uid="," Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
   
-      <Button Background="#dedcdc" Name="numberMinus" Grid.Column="3" Grid.Row="5" Content="-" Uid="-" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
+      <Button Background="#dedcdc" Name="buttonMinus" Grid.Column="3" Grid.Row="5" Content="-" Uid="-" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
       
-      <Button Background="#dedcdc" Name="numberMultiply" Grid.Column="3" Grid.Row="4" Content="x" Uid="*" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
+      <Button Background="#dedcdc" Name="buttonMultiply" Grid.Column="3" Grid.Row="4" Content="x" Uid="*" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
       
-      <Button Background="#dedcdc" Name="numberDivide" Grid.Column="3" Grid.Row="3" Content="÷" Uid="/" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
+      <Button Background="#dedcdc" Name="buttonDivide" Grid.Column="3" Grid.Row="3" Content="÷" Uid="/" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
       
-      <Button Background="#dedcdc" Name="numberRoot" Grid.Column="2" Grid.Row="3" Content="√" Uid="root" Margin="1.5" FontSize="20" Opacity="0.75" Click="LocalAction_OnClick"></Button>
+      <Button Background="#dedcdc" Name="buttonRoot" Grid.Column="2" Grid.Row="3" Content="√" Uid="root" Margin="1.5" FontSize="20" Opacity="0.75" Click="LocalAction_OnClick"></Button>
       
-      <Button Background="#dedcdc" Name="numberDegree" Grid.Column="1" Grid.Row="3" Content="x²" Uid="^2" Margin="1.5" FontSize="20" Opacity="0.75" Click="LocalAction_OnClick"></Button>
+      <Button Background="#dedcdc" Name="buttonDegree" Grid.Column="1" Grid.Row="3" Content="x²" Uid="^2" Margin="1.5" FontSize="20" Opacity="0.75" Click="LocalAction_OnClick"></Button>
       
-      <Button Background="#dedcdc" Name="numberOneDivided" Grid.Column="0" Grid.Row="3" Content="1/x" Uid="1/x" Margin="1.5" FontSize="20" Opacity="0.75" Click="LocalAction_OnClick"></Button>
+      <Button Background="#dedcdc" Name="buttonOneDivided" Grid.Column="0" Grid.Row="3" Content="1/x" Uid="1/x" Margin="1.5" FontSize="20" Opacity="0.75" Click="LocalAction_OnClick"></Button>
       
       <Button Background="#dedcdc" Name="buttonPercent" Grid.Column="0" Grid.Row="2" Content="%" Uid="%" Margin="1.5" FontSize="20" Opacity="0.75" Click="LocalAction_OnClick"></Button>
       
@@ -76,7 +84,8 @@
      
       <Button Background="#dedcdc" Name="buttonEraseCharacter" Grid.Column="3" Grid.Row="2" Content="⌫" Uid="⌫" Margin="1.5" FontSize="20" Opacity="0.75" Click="Erase_OnClick"></Button>
      
-      <Button Background="#ffb8c6" Name="numberEqually" Grid.Column="3" Grid.Row="7" Content="=" Uid="=" Margin="1.5" FontSize="20" Opacity="0.75" Click="NumberEqually_OnClick"></Button>
+      <Button Background="#ffb8c6" Name="numberEqually" Grid.Column="3" Grid.Row="7" Content="=" Uid="=" Margin="1.5" FontSize="20" Opacity="0.75" Click="ButtonEqually_OnClick"></Button>
       
-    </Grid>
+    <Button Background="#dedcdc" Name="buttonErase" IsEnabled="False" Visibility="Hidden"></Button>
+  </Grid>
 </Window>

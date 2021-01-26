@@ -13,3 +13,5 @@ C:\Users\rmari\RiderProjects\calculator\calculator\obj\Debug\calculator.csproj.G
 C:\Users\rmari\RiderProjects\calculator\calculator\obj\Debug\calculator.csproj.CoreCompileInputs.cache
 C:\Users\rmari\RiderProjects\calculator\calculator\obj\Debug\calculator.exe
 C:\Users\rmari\RiderProjects\calculator\calculator\obj\Debug\calculator.pdb
+C:\Users\rmari\RiderProjects\calculator\calculator\bin\Debug\MathParser.org-mXparser.dll
+C:\Users\rmari\RiderProjects\calculator\calculator\obj\Debug\calculator.csproj.CopyComplete
