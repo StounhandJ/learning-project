@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using org.mariuszgromada.math.mxparser;
 using Expression = org.mariuszgromada.math.mxparser.Expression;
@@ -24,7 +26,10 @@ namespace calculator
         private bool bracket;
         private bool action;
         private bool denial;
+        private Label numberSystem;
         private bool standardCalculator = true;
+        private bool programmerCalculator = false;
+        private string numberSystemText = "";
         private string example = "";
         private string originNumber = "";
         public string visibleExample = "";
@@ -32,7 +37,34 @@ namespace calculator
         public MainWindow()
         {
             InitializeComponent();
+            Remove();
+            CreateStandard();
+            standardCalculator = true;
         }
+        
+        
+        private string Conv(int From, int To, string Numbers)
+        {
+            Numbers = Numbers.Trim();
+            if (Numbers == string.Empty) return string.Empty;
+            string[] buf = Numbers.Split(' ');
+            string Out = "";            
+
+            foreach (string s in buf)
+            {
+                try
+                {                    
+                    Out = Out + Convert.ToString(Convert.ToInt64(s, From), To) + " ";
+                }
+                catch
+                {
+                    Out = Out + Convert.ToString(Int64.MaxValue, To) + " ";
+                }
+            }
+
+            return Out.Trim();
+        }
+        
         private void restart(bool localAction=false,bool all = false)
         {
             if (!ready)
@@ -78,12 +110,79 @@ namespace calculator
 
             return response;
         }
+        
+        private Label getLabelNumberSystem(string system)
+        {
+            foreach (Label label in FindVisualChildren<Label>(contol))
+            {
+                if (system==label.Name)
+                {
+                    return label;
+                }
+            }
+            var labelO = new Label();
+            labelO.Name = "DEC";
+            return labelO;
+        }
+        
+        private Button getButton(string name)
+        {
+            foreach (Button bt in FindVisualChildren<Button>(contol))
+            {
+                if (name==bt.Name)
+                {
+                    return bt;
+                }
+            }
+            return new Button();
+        }
 
-
+        private void LableChangesSystem()
+        {
+            var NameSystem = new List<string>()
+            {
+                "HEX","DEC","OCT","BIN","GG"
+            };
+            var TypeSystem = new Dictionary<string, int>()
+            {
+                {"HEX", 16},
+                {"DEC", 10},
+                {"OCT", 8},
+                {"BIN", 2},
+            };
+            int queue = 0;
+            if (programmerCalculator)
+            {
+                foreach (Label label in FindVisualChildren<Label>(contol))
+                {
+                    if (NameSystem[queue]==label.Name)
+                    {
+                        switch (NameSystem[queue])
+                        {
+                            case "HEX":
+                                label.Content = label.Content.ToString().Substring(0, 4) + Conv(TypeSystem[numberSystem.Name], 16, number.ToString()).ToUpper();
+                                break;
+                            case "DEC":
+                                label.Content = label.Content.ToString().Substring(0, 4) + Conv(TypeSystem[numberSystem.Name], 10, number.ToString());
+                                break;
+                            case "OCT":
+                                label.Content = label.Content.ToString().Substring(0, 4) + Conv(TypeSystem[numberSystem.Name], 8, number.ToString());
+                                break;
+                            case "BIN":
+                                label.Content = label.Content.ToString().Substring(0, 4) + Conv(TypeSystem[numberSystem.Name], 2, number.ToString());
+                                break;
+                        }
+                
+                        queue += 1;
+                    }
+                }
+            }
+        }
         private void display()
         {
             LabelNumber.Content = (denial?"-":"")+(number!=0?number.ToString():"");
             LabelExample.Content = visibleExample.Replace(',', '.')+originNumber;
+            LableChangesSystem();
         }
 
         private double rounding(double num)
@@ -259,7 +358,7 @@ namespace calculator
                     switch (tb.Uid)
                     {
                         case "+/-":
-                            if (example[example.Length-1]=='+' || example[example.Length-1]=='-' )
+                            if (example!="" && (example[example.Length-1]=='+' || example[example.Length-1]=='-'))
                             {
                                 example = example.Substring(0,example.Length-1)+(number*-1<0 && example[example.Length-1]=='-'?"+":"-");
                                 denial = true;
@@ -321,14 +420,12 @@ namespace calculator
             {
                 foreach (Button tb in FindVisualChildren<Button>(contol))
                 {
-                    if (tb.Content == "C")
+                    if (tb.Uid == "C")
                     {
                         tb.Content = "CE";
                         tb.Uid = "CE";
                     }
                 }
-
-                
             }
             restart(all:true);
             number = localAction ? 0 : number;
@@ -373,6 +470,7 @@ namespace calculator
                 double RoundResponse;
                 double.TryParse(response.Replace('.', ','), out RoundResponse);
                 LabelNumber.Content = Math.Round(RoundResponse, 9);
+                LableChangesSystem();
             }
             catch (Exception exception)
             {
@@ -396,6 +494,13 @@ namespace calculator
             CreateEngineering();
             standardCalculator = false;
         }
+        
+        private void Programmer_OnClick(object sender, RoutedEventArgs e)
+        {
+            Remove();
+            CreateProgrammer();
+            standardCalculator = false;
+        }
 
         private void Exit_OnClick(object sender, RoutedEventArgs e)
         {
@@ -403,12 +508,15 @@ namespace calculator
         }
         public void Remove()
         {
+            numberSystem = getLabelNumberSystem("DEC");
+            programmerCalculator = false;
             ready = false;
             restart(all:true);
             display();
             var RowCount = mainGrid.RowDefinitions.Count;
             var ColumnCount = mainGrid.ColumnDefinitions.Count;
             var ButtonList = new List<Button>();
+            var LabelList = new List<Label>();
             for (int i = 0; i < RowCount; i++)
             {
                 mainGrid.RowDefinitions.RemoveAt(0);
@@ -421,9 +529,21 @@ namespace calculator
             {
                 ButtonList.Add(tb);
             }
+            foreach (Label label in FindVisualChildren<Label>(contol))
+            {
+                if (label.Name!="LabelExample" &&label.Name!="LabelNumber")
+                {
+                    LabelList.Add(label);
+                }
+                
+            }
             foreach (var button in ButtonList)
             {
                 mainGrid.Children.Remove(button);
+            }
+            foreach (var label in LabelList)
+            {
+                mainGrid.Children.Remove(label);
             }
         }
 
@@ -659,7 +779,144 @@ namespace calculator
             Equally.Click += ButtonEqually_OnClick;
             mainGrid.Children.Add(Equally);  
         }
+        
+        public void CreateProgrammer()
+        {
+            programmerCalculator = true;
+            var buttonEvents = new Dictionary<string, RoutedEventHandler>()
+            {
+                {"C", Erase_OnClick},
+                {"⌫", Erase_OnClick},
+                {"(", Action_OnClick},
+                {")", Action_OnClick},
+                {"÷", Action_OnClick},
+                {"*", Action_OnClick},
+                {"-", Action_OnClick},
+                {"+", Action_OnClick},
+            };
+            for (int i = 0; i < 10; i++)
+            {
+                mainGrid.RowDefinitions.Add(new RowDefinition());
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            }
+            Grid.SetRow(LabelExample,0);
+            Grid.SetColumn(LabelExample,3);
+            Grid.SetColumnSpan(LabelExample,2);
+            Grid.SetRow(LabelNumber,1);
+            Grid.SetColumn(LabelNumber,3);
+            Grid.SetColumnSpan(LabelNumber,2);
+            LabelNumber.FontSize = 25;
+            
+            var ListNumber = new List<Button>();
+            ListNumber.Add(new Button(){Content = "F",Uid = "F",Name = "numberF",IsEnabled=false});
+            ListNumber.Add(new Button(){Content = "+/-",Uid = "+/-"});
+            ListNumber.Add(new Button(){Content = "0",Uid = "0", Name = "numberZero"});
+            ListNumber.Add(new Button(){Content = ",",Uid = ",",IsEnabled=false});
+            ListNumber.Add(new Button(){Content = "E",Uid = "E", Name = "numberE",IsEnabled=false});
+            ListNumber.Add(new Button(){Content = "1",Uid = "1", Name = "numberOne"});
+            ListNumber.Add(new Button(){Content = "2",Uid = "2", Name = "numberTwo"});
+            ListNumber.Add(new Button(){Content = "3",Uid = "3", Name = "numberTree"});
+            ListNumber.Add(new Button(){Content = "D",Uid = "D", Name = "numberD",IsEnabled=false});
+            ListNumber.Add(new Button(){Content = "4",Uid = "4", Name = "numberFour"});
+            ListNumber.Add(new Button(){Content = "5",Uid = "5", Name = "numberFive"});
+            ListNumber.Add(new Button(){Content = "6",Uid = "6", Name = "numberSix"});
+            ListNumber.Add(new Button(){Content = "C",Uid = "CS", Name = "numberC",IsEnabled=false});
+            ListNumber.Add(new Button(){Content = "7",Uid = "7", Name = "numberSeven"});
+            ListNumber.Add(new Button(){Content = "8",Uid = "8", Name = "numberEight"});
+            ListNumber.Add(new Button(){Content = "9",Uid = "9", Name = "numberNine"});
+            ListNumber.Add(new Button(){Content = "B",Uid = "B", Name = "numberB",IsEnabled=false});
+            ListNumber.Add(new Button(){Content = "A",Uid = "A", Name = "numberA",IsEnabled=false});
 
+            var column = 0;
+            var row = 9;
+            foreach (var button in ListNumber)
+            {
+                Grid.SetRow(button,row);
+                Grid.SetColumn(button,column);
+                row -= column == 3 || row<=5? 1 : 0;
+                column = column == 3 ?  0 : row<=5? 0:column+1;
+                button.Margin = new Thickness(1.5);
+                button.Background = (Brush)new BrushConverter().ConvertFrom("#ffffff");
+                button.FontSize = 20;
+                button.Opacity = 0.75;
+                if (button.Uid!="+/-")
+                {
+                    button.Click += Number_OnClick;
+                }
+                else
+                {
+                    button.Click += Action_OnClick;
+                }
+                mainGrid.Children.Add(button);
+            }
+            var ListButtonAction = new List<Button>();
+            
+            ListButtonAction.Add(new Button(){Content = "(",Uid = "("});
+            ListButtonAction.Add(new Button(){Content = ")",Uid = ")"});
+            ListButtonAction.Add(new Button(){Content = "C",Uid = "C"});
+            ListButtonAction.Add(new Button(){Content = "⌫",Uid = "⌫"});
+            ListButtonAction.Add(new Button(){Content = "÷",Uid = "÷"});
+            ListButtonAction.Add(new Button(){Content = "x",Uid = "*"});
+            ListButtonAction.Add(new Button(){Content = "-",Uid = "-"});
+            ListButtonAction.Add(new Button(){Content = "+",Uid = "+"});
+            column = 1;
+            row = 4;
+            foreach (var button in ListButtonAction)
+            {
+                Grid.SetRow(button,row);
+                Grid.SetColumn(button,column);
+                row += row>=5?1:column == 4 ? 1 : 0;
+                column = row>=5?4:column == 4 ?  0 : column+1;
+                button.Margin = new Thickness(1.5);
+                button.Background = (Brush)new BrushConverter().ConvertFrom("#dedcdc");
+                button.FontSize = 20;
+                button.Opacity = 0.75;
+                button.Click += buttonEvents[button.Uid];
+                mainGrid.Children.Add(button);
+            }
+            var ListLabel = new List<Label>();
+            ListLabel.Add(new Label(){Content = "HEX 0", Name = "HEX"});
+            ListLabel.Add(new Label(){Content = "DEC 0", Name = "DEC",FontWeight = FontWeights.Bold});
+            ListLabel.Add(new Label(){Content = "OCT 0", Name = "OCT"});
+            ListLabel.Add(new Label(){Content = "BIN 0", Name = "BIN"});
+            Grid.SetRow(ListLabel[0],2);
+            Grid.SetRow(ListLabel[1],2);
+            Grid.SetRowSpan(ListLabel[0],2);
+            Grid.SetRowSpan(ListLabel[1],2);
+            Grid.SetRow(ListLabel[2],3);
+            Grid.SetRow(ListLabel[3],3);
+            ListLabel[0].Margin = new Thickness(0,7,0,55);
+            ListLabel[1].Margin = new Thickness(0,27,0,35);
+            ListLabel[2].Margin = new Thickness(0,5,0,20);
+            ListLabel[3].Margin = new Thickness(0,23,0,0);
+            
+            
+            foreach (var label in ListLabel)
+            {
+                Grid.SetColumn(label,0);
+                Grid.SetColumnSpan(label,5);
+                label.MouseEnter += LabelExample_OnMouseEnter;
+                label.MouseLeave += LabelExample_OnMouseLeave;
+                label.MouseDown += LabelExample_OnClick;
+                label.FontSize = 15;
+                label.Padding = new Thickness(0);
+                mainGrid.Children.Add(label);
+            }
+
+            Button Equally = new Button(){Content = "=",Uid = "=",FontSize = 20, Opacity = 0.75,
+                Margin = new Thickness(1.5),Background = (Brush)new BrushConverter().ConvertFrom("#ffb8c6"),
+            };
+            Grid.SetRow(Equally,9);
+            Grid.SetColumn(Equally,4);
+            Equally.Click += ButtonEqually_OnClick;
+            mainGrid.Children.Add(Equally);
+            numberSystem = getLabelNumberSystem("DEC");
+        }
+
+        
         public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
         {
             if (depObj != null)
@@ -677,6 +934,112 @@ namespace calculator
                         yield return childOfChild;
                     }
                 }
+            }
+        }
+
+        private void LabelExample_OnMouseEnter(object sender, MouseEventArgs e)
+        {
+            var tes = (Label) e.OriginalSource;
+            tes.Background = (Brush)new BrushConverter().ConvertFrom("#dedcdc");
+        }
+            
+        private void LabelExample_OnMouseLeave(object sender, MouseEventArgs e)
+        {
+            var tes = (Label) e.OriginalSource;
+            tes.Background = (Brush)new BrushConverter().ConvertFrom("#ffffff");
+        }
+        
+        private void LabelExample_OnClick(object sender, MouseEventArgs e)
+        {
+            var TypeSystem = new Dictionary<string, int>()
+            {
+                {"HEX", 16},
+                {"DEC", 10},
+                {"OCT", 8},
+                {"BIN", 2},
+            };
+            var localNumber = number;
+            restart(all: true);
+            foreach (Label label in FindVisualChildren<Label>(contol))
+            {
+                if (label.IsMouseOver)
+                {
+                    switch (label.Name)
+                        {
+                            case "HEX":
+                                getButton("numberA").IsEnabled = true;
+                                getButton("numberB").IsEnabled = true;
+                                getButton("numberC").IsEnabled = true;
+                                getButton("numberD").IsEnabled = true;
+                                getButton("numberE").IsEnabled = true;
+                                getButton("numberF").IsEnabled = true;
+                                getButton("numberTwo").IsEnabled = true;
+                                getButton("numberTree").IsEnabled = true;
+                                getButton("numberFour").IsEnabled = true;
+                                getButton("numberFive").IsEnabled = true;
+                                getButton("numberSix").IsEnabled = true;
+                                getButton("numberSeven").IsEnabled = true;
+                                getButton("numberEight").IsEnabled = true;
+                                getButton("numberNine").IsEnabled = true;
+                                double.TryParse( Conv(TypeSystem[numberSystem.Name], 16, number.ToString()).ToUpper(),out number);
+                                break;
+                            case "DEC":
+                                getButton("numberA").IsEnabled =false;
+                                getButton("numberB").IsEnabled =false;
+                                getButton("numberC").IsEnabled =false;
+                                getButton("numberD").IsEnabled =false;
+                                getButton("numberE").IsEnabled =false;
+                                getButton("numberF").IsEnabled =false;
+                                getButton("numberTwo").IsEnabled = true;
+                                getButton("numberTree").IsEnabled = true;
+                                getButton("numberFour").IsEnabled = true;
+                                getButton("numberFive").IsEnabled = true;
+                                getButton("numberSix").IsEnabled = true;
+                                getButton("numberSeven").IsEnabled = true;
+                                getButton("numberEight").IsEnabled = true;
+                                getButton("numberNine").IsEnabled =true;
+                                double.TryParse( Conv(TypeSystem[numberSystem.Name], 10, number.ToString()).ToUpper(),out number);
+                                break;
+                            case "OCT":
+                                getButton("numberA").IsEnabled =false;
+                                getButton("numberB").IsEnabled =false;
+                                getButton("numberC").IsEnabled =false;
+                                getButton("numberD").IsEnabled =false;
+                                getButton("numberE").IsEnabled =false;
+                                getButton("numberF").IsEnabled =false;
+                                getButton("numberTwo").IsEnabled = true;
+                                getButton("numberTree").IsEnabled = true;
+                                getButton("numberFour").IsEnabled = true;
+                                getButton("numberFive").IsEnabled = true;
+                                getButton("numberSix").IsEnabled = true;
+                                getButton("numberSeven").IsEnabled = true;
+                                getButton("numberEight").IsEnabled = false;
+                                getButton("numberNine").IsEnabled =false;
+                                double.TryParse( Conv(TypeSystem[numberSystem.Name], 8, number.ToString()).ToUpper(),out number);
+                                break;
+                            case "BIN":
+                                getButton("numberA").IsEnabled = false;
+                                getButton("numberB").IsEnabled = false;
+                                getButton("numberC").IsEnabled = false;
+                                getButton("numberD").IsEnabled = false;
+                                getButton("numberE").IsEnabled = false;
+                                getButton("numberF").IsEnabled = false;
+                                getButton("numberTwo").IsEnabled = false;
+                                getButton("numberTree").IsEnabled = false;
+                                getButton("numberFour").IsEnabled = false;
+                                getButton("numberFive").IsEnabled = false;
+                                getButton("numberSix").IsEnabled = false;
+                                getButton("numberSeven").IsEnabled = false;
+                                getButton("numberEight").IsEnabled = false;
+                                getButton("numberNine").IsEnabled = false;
+                                double.TryParse( Conv(TypeSystem[numberSystem.Name], 2, number.ToString()).ToUpper(),out number);
+                                break;
+                        }
+                    numberSystem.FontWeight = FontWeights.Normal;
+                     label.FontWeight = FontWeights.Bold;
+                     numberSystem = label;
+                }
+                display();
             }
         }
     }

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:calculator"
         mc:Ignorable="d"
         Title="Калькулятор" Height="460" Width="650" MinHeight="460" MinWidth="500" MaxHeight="660" MaxWidth="900">
-  <Grid Name="mainGrid">
+  <Grid Name="mainGrid" ShowGridLines="False">
     <!-- ShowGridLines="True" -->
     <Grid.ColumnDefinitions>
         <ColumnDefinition />
@@ -29,16 +29,21 @@
       <MenuItem Header="Калькулятор">
         <MenuItem Header="Обычный" Click="Standard_OnClick"/>
         <MenuItem Header="Инжинерный" Click="Engineering_OnClick"/>
-        <MenuItem Header="Программист"/>
+        <MenuItem Header="Программист" Click="Programmer_OnClick"/>
       </MenuItem>
       <MenuItem Header="Выход" Click="Exit_OnClick"/>
     </Menu>
     
-      <Label Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Foreground="#6b6565" FontSize="20" Name="LabelExample"></Label>
+      <Label  Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Foreground="#6b6565" FontSize="20" Name="LabelExample"></Label>
         
       <Label Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" FontSize="38" Name="LabelNumber"></Label>
-      
-    <Button Background="#ffffff" Name="numberOne" Grid.Column="0" Grid.Row="6" Content="1" Uid="1" Margin="1.5" FontSize="20" Opacity="0.75" Click="Number_OnClick"></Button>
+    
+    <!-- <Label  Grid.Column="0" Grid.ColumnSpan="4" Background="#dedcdc" Grid.RowSpan="2" Grid.Row="0" Padding="0" Margin="0 30 0  45" Foreground="#6b6565" FontSize="15" MouseEnter="LabelExample_OnMouseEnter" MouseLeave="LabelExample_OnMouseLeave">HEX 0</Label> -->
+    <!-- <Label  Grid.Column="0" Grid.ColumnSpan="4" Background="#ffb8c6" Grid.RowSpan="2" Grid.Row="0" Padding="0" Margin="0 50 0  35" Foreground="#6b6565" FontSize="15" MouseEnter="LabelExample_OnMouseEnter" MouseLeave="LabelExample_OnMouseLeave">DEC 0</Label> -->
+    <!-- <Label  Grid.Column="0" Grid.ColumnSpan="4" Background="#dedcdc" Grid.Row="1" Padding="0" Margin="0 15 0  0" Foreground="#6b6565" FontSize="15" MouseEnter="LabelExample_OnMouseEnter" MouseLeave="LabelExample_OnMouseLeave">OCT 0</Label> -->
+    <!-- <Label  Grid.Column="0" Grid.ColumnSpan="4" Background="#ffb8c6" Grid.Row="1" Padding="0" Margin="0 35 0  0" Foreground="#6b6565" FontSize="15" MouseEnter="LabelExample_OnMouseEnter" MouseLeave="LabelExample_OnMouseLeave">BIN 0</Label> -->
+    
+      <Button Background="#ffffff" Name="numberOne" Grid.Column="0" Grid.Row="6" Content="1" Uid="1" Margin="1.5" FontSize="20" Opacity="0.75" Click="Number_OnClick"></Button>
       
       <Button Background="#ffffff" Name="numberTwo" Grid.Column="1" Grid.Row="6" Content="2" Uid="2" Margin="1.5" FontSize="20" Opacity="0.75" Click="Number_OnClick"></Button>
       
@@ -58,17 +63,17 @@
         
       <Button Background="#ffffff" Name="numberZero" Grid.Column="1" Grid.Row="7" Content="0" Uid="0" Margin="1.5" FontSize="20" Opacity="0.75" Click="Number_OnClick"></Button>
         
-      <Button Background="#dedcdc" Name="buttonPlus" Grid.Column="3" Grid.Row="6" Content="+" Uid="+" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
+      <Button Background="#dedcdc" Name="numberA" Grid.Column="3" Grid.Row="6" Content="+" Uid="+" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
       
-      <Button Background="#ffffff" Name="buttonChangingSign" Grid.Column="0" Grid.Row="7" Content="+/-" Uid="+/-" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
+      <Button Background="#ffffff" Name="numberB" Grid.Column="0" Grid.Row="7" Content="+/-" Uid="+/-" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
         
-      <Button Background="#ffffff" Name="buttonPoinr" Grid.Column="2" Grid.Row="7" Content="," Uid="," Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
+      <Button Background="#ffffff" Name="numberC" Grid.Column="2" Grid.Row="7" Content="," Uid="," Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
   
-      <Button Background="#dedcdc" Name="buttonMinus" Grid.Column="3" Grid.Row="5" Content="-" Uid="-" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
+      <Button Background="#dedcdc" Name="numberD" Grid.Column="3" Grid.Row="5" Content="-" Uid="-" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
       
-      <Button Background="#dedcdc" Name="buttonMultiply" Grid.Column="3" Grid.Row="4" Content="x" Uid="*" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
+      <Button Background="#dedcdc" Name="numberE" Grid.Column="3" Grid.Row="4" Content="x" Uid="*" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
       
-      <Button Background="#dedcdc" Name="buttonDivide" Grid.Column="3" Grid.Row="3" Content="÷" Uid="/" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
+      <Button Background="#dedcdc" Name="numberF" Grid.Column="3" Grid.Row="3" Content="÷" Uid="/" Margin="1.5" FontSize="20" Opacity="0.75" Click="Action_OnClick"></Button>
       
       <Button Background="#dedcdc" Name="buttonRoot" Grid.Column="2" Grid.Row="3" Content="√" Uid="root" Margin="1.5" FontSize="20" Opacity="0.75" Click="LocalAction_OnClick"></Button>
       
@@ -86,6 +91,6 @@
      
       <Button Background="#ffb8c6" Name="numberEqually" Grid.Column="3" Grid.Row="7" Content="=" Uid="=" Margin="1.5" FontSize="20" Opacity="0.75" Click="ButtonEqually_OnClick"></Button>
       
-    <Button Background="#dedcdc" Name="buttonErase" IsEnabled="False" Visibility="Hidden"></Button>
+    <Button Name="buttonErase" IsEnabled="False" Visibility="Hidden"></Button>
   </Grid>
 </Window>
