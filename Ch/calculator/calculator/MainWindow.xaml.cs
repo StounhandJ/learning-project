@@ -69,7 +69,7 @@ namespace calculator
         {
             if (!ready)
             {
-                visibleExample = all?"":localAction?"":number.ToString();
+                visibleExample = all?"":localAction?"":numberSystem.Name=="HEX"?Conv(10,16,number.ToString()).ToUpper():number.ToString();
                 example = all?"":localAction?"":number.ToString();
                 numberPast = number;
                 number = localAction?number:0;
@@ -145,7 +145,7 @@ namespace calculator
             };
             var TypeSystem = new Dictionary<string, int>()
             {
-                {"HEX", 16},
+                {"HEX", 10},
                 {"DEC", 10},
                 {"OCT", 8},
                 {"BIN", 2},
@@ -180,7 +180,8 @@ namespace calculator
         }
         private void display()
         {
-            LabelNumber.Content = (denial?"-":"")+(number!=0?number.ToString():"");
+            var localNumber = (denial ? "-" : "") + (number != 0 ? number.ToString() : "");
+            LabelNumber.Content = numberSystem.Name=="HEX"?Conv(10,16,localNumber).ToUpper():localNumber;
             LabelExample.Content = visibleExample.Replace(',', '.')+originNumber;
             LableChangesSystem();
         }
@@ -206,7 +207,7 @@ namespace calculator
                                 double.TryParse(cloneNumber.Substring(0,cloneNumber.Length-1), out number);
                             }
                             break;
-                        case "C":
+                        case "CbE":
                             ready = false;
                             restart(all:true);
                             break;
@@ -216,7 +217,7 @@ namespace calculator
                             if (!standardCalculator)
                             {
                                 tb.Content = "C";
-                                tb.Uid = "C";
+                                tb.Uid = "CbE";
                             }
                             break;
                     }
@@ -339,7 +340,8 @@ namespace calculator
         private void ActionRestart(Button tb)
         {
             example+=number==0?tb.Uid:number+tb.Uid;
-            visibleExample+=(denial?"-":"")+(localAction?originNumber+tb.Uid:number==0?tb.Uid:number+tb.Uid);
+            var localNumber = numberSystem.Name=="HEX"?Conv(10,16,number.ToString()).ToUpper():number.ToString();
+            visibleExample+=(denial?"-":"")+(localAction?originNumber+tb.Content:number==0?tb.Content:localNumber+tb.Content);
             numberPast = number!=0?number:numberPast;
             number = 0;
             originNumber = "";
@@ -420,7 +422,7 @@ namespace calculator
             {
                 foreach (Button tb in FindVisualChildren<Button>(contol))
                 {
-                    if (tb.Uid == "C")
+                    if (tb.Uid == "CbE")
                     {
                         tb.Content = "CE";
                         tb.Uid = "CE";
@@ -436,15 +438,23 @@ namespace calculator
             {
                 if (tb.IsFocused)
                 {
+                    var localNumber = Conv(10, 16, number.ToString());
                     if (afterPoint && number.ToString().IndexOf(',')==-1)
                     {
                         double.TryParse($"{number.ToString()},{tb.Uid}",out number);
                     }
                     else
                     {
-                        double.TryParse($"{number.ToString()}{tb.Uid}",out number);
+                        if (numberSystem.Name=="HEX")
+                        {
+                            localNumber += tb.Uid;
+                            double.TryParse(Conv(16, 10, localNumber),out number);
+                        }
+                        else
+                        {
+                            double.TryParse($"{number.ToString()}{tb.Uid}",out number);
+                        }
                     }
-                    LabelNumber.Content = number;
                 }
             }
             display();
@@ -458,18 +468,24 @@ namespace calculator
                 {
                     return;
                 }
+
+                var tes2 =
+                    (example + (bracket ? "" : number == 0 ? numberPast.ToString() : number.ToString())).Replace(',',
+                        '.');
                 Expression eh = new Expression((example + (bracket?"":number==0?numberPast.ToString():number.ToString())).Replace(',', '.'));
-                var response = eh.calculate().ToString();
+                double response;
+                double.TryParse(eh.calculate().ToString().Replace('.', ','),out response);
+                response = numberSystem.Name == "HEX" ? Math.Round(response, 0) : response;
                 //var response = new DataTable().Compute((example + number).Replace(',', '.'), null).ToString();
-                visibleExample = $"{visibleExample+(denial?"-":"")+(bracket?"":number==0?numberPast.ToString():number.ToString())}=".Replace(',', '.');
-                double.TryParse(response, out number);
-                response = response.Replace(',', '.');
+                // var numberLocal = (bracket ? "" : number == 0 ? numberPast.ToString() : number.ToString());
+                // numberLocal = numberSystem.Name == "HEX" ? Conv(10, 16, numberLocal) : numberLocal;
+                visibleExample = $"{visibleExample+(originNumber!=""?originNumber:(denial?"-":"")+number)}=".Replace(',', '.');
+                number = response;
+                double RoundResponse = response;
                 ready = false;
                 localAction = false;
                 LabelExample.Content = visibleExample;
-                double RoundResponse;
-                double.TryParse(response.Replace('.', ','), out RoundResponse);
-                LabelNumber.Content = Math.Round(RoundResponse, 9);
+                LabelNumber.Content = numberSystem.Name=="HEX"? Conv(10,16,Math.Round(RoundResponse, 0).ToString()).ToUpper():Math.Round(RoundResponse, 9).ToString();
                 LableChangesSystem();
             }
             catch (Exception exception)
@@ -555,10 +571,10 @@ namespace calculator
                 {"1/x", LocalAction_OnClick},
                 {"^2", LocalAction_OnClick},
                 {"root", LocalAction_OnClick},
-                {"C", Erase_OnClick},
+                {"CbE", Erase_OnClick},
                 {"CE", Erase_OnClick},
                 {"⌫", Erase_OnClick},
-                {"÷", Action_OnClick},
+                {"/", Action_OnClick},
                 {"*", Action_OnClick},
                 {"-", Action_OnClick},
                 {"+", Action_OnClick},
@@ -618,13 +634,13 @@ namespace calculator
             var ListButtonAction = new List<Button>();
             ListButtonAction.Add(new Button(){Content = "%",Uid = "%"});
             ListButtonAction.Add(new Button(){Content = "CE",Uid = "CE"});
-            ListButtonAction.Add(new Button(){Content = "C",Uid = "C"});
+            ListButtonAction.Add(new Button(){Content = "C",Uid = "CbE"});
             ListButtonAction.Add(new Button(){Content = "⌫",Uid = "⌫"});
             ListButtonAction.Add(new Button(){Content = "1/x",Uid = "1/x"});
             ListButtonAction.Add(new Button(){Content = "x²",Uid = "^2"});
             ListButtonAction.Add(new Button(){Content = "√",Uid = "root"});
-            ListButtonAction.Add(new Button(){Content = "÷",Uid = "÷"});
-            ListButtonAction.Add(new Button(){Content = "x",Uid = "*"});
+            ListButtonAction.Add(new Button(){Content = "÷",Uid = "/"});
+            ListButtonAction.Add(new Button(){Content = "×",Uid = "*"});
             ListButtonAction.Add(new Button(){Content = "-",Uid = "-"});
             ListButtonAction.Add(new Button(){Content = "+",Uid = "+"});
             column = 0;
@@ -658,7 +674,7 @@ namespace calculator
                 {"sin", LocalAction_OnClick},
                 {"pi", LocalAction_OnClick},
                 {"e", LocalAction_OnClick},
-                {"C", Erase_OnClick},
+                {"CbE", Erase_OnClick},
                 {"⌫", Erase_OnClick},
                 {"^2", LocalAction_OnClick},
                 {"1/x", LocalAction_OnClick},
@@ -673,7 +689,7 @@ namespace calculator
                 {"10^", LocalAction_OnClick},
                 {"log", LocalAction_OnClick},
                 {"ln", LocalAction_OnClick},
-                {"÷", Action_OnClick},
+                {"/", Action_OnClick},
                 {"*", Action_OnClick},
                 {"-", Action_OnClick},
                 {"+", Action_OnClick},
@@ -734,7 +750,7 @@ namespace calculator
             ListButtonAction.Add(new Button(){Content = "sin",Uid = "sin"});
             ListButtonAction.Add(new Button(){Content = "π",Uid = "pi"});
             ListButtonAction.Add(new Button(){Content = "e",Uid = "e"});
-            ListButtonAction.Add(new Button(){Content = "C",Uid = "C", Name="buttonErase"});
+            ListButtonAction.Add(new Button(){Content = "C",Uid = "CbE", Name="buttonErase"});
             ListButtonAction.Add(new Button(){Content = "⌫",Uid = "⌫"});
             ListButtonAction.Add(new Button(){Content = "x²",Uid = "^2"});
             ListButtonAction.Add(new Button(){Content = "1/x",Uid = "1/x"});
@@ -745,9 +761,9 @@ namespace calculator
             ListButtonAction.Add(new Button(){Content = "(",Uid = "("});
             ListButtonAction.Add(new Button(){Content = ")",Uid = ")"});
             ListButtonAction.Add(new Button(){Content = "x!",Uid = "fact"});
-            ListButtonAction.Add(new Button(){Content = "÷",Uid = "÷"});
+            ListButtonAction.Add(new Button(){Content = "÷",Uid = "/"});
             ListButtonAction.Add(new Button(){Content = "x^y",Uid = "^"});
-            ListButtonAction.Add(new Button(){Content = "x",Uid = "*"});
+            ListButtonAction.Add(new Button(){Content = "×",Uid = "*"});
             ListButtonAction.Add(new Button(){Content = "10^x",Uid = "10^"});
             ListButtonAction.Add(new Button(){Content = "-",Uid = "-"});
             ListButtonAction.Add(new Button(){Content = "log",Uid = "log"});
@@ -785,11 +801,11 @@ namespace calculator
             programmerCalculator = true;
             var buttonEvents = new Dictionary<string, RoutedEventHandler>()
             {
-                {"C", Erase_OnClick},
+                {"CbE", Erase_OnClick},
                 {"⌫", Erase_OnClick},
                 {"(", Action_OnClick},
                 {")", Action_OnClick},
-                {"÷", Action_OnClick},
+                {"/", Action_OnClick},
                 {"*", Action_OnClick},
                 {"-", Action_OnClick},
                 {"+", Action_OnClick},
@@ -823,7 +839,7 @@ namespace calculator
             ListNumber.Add(new Button(){Content = "4",Uid = "4", Name = "numberFour"});
             ListNumber.Add(new Button(){Content = "5",Uid = "5", Name = "numberFive"});
             ListNumber.Add(new Button(){Content = "6",Uid = "6", Name = "numberSix"});
-            ListNumber.Add(new Button(){Content = "C",Uid = "CS", Name = "numberC",IsEnabled=false});
+            ListNumber.Add(new Button(){Content = "C",Uid = "C", Name = "numberC",IsEnabled=false});
             ListNumber.Add(new Button(){Content = "7",Uid = "7", Name = "numberSeven"});
             ListNumber.Add(new Button(){Content = "8",Uid = "8", Name = "numberEight"});
             ListNumber.Add(new Button(){Content = "9",Uid = "9", Name = "numberNine"});
@@ -856,10 +872,10 @@ namespace calculator
             
             ListButtonAction.Add(new Button(){Content = "(",Uid = "("});
             ListButtonAction.Add(new Button(){Content = ")",Uid = ")"});
-            ListButtonAction.Add(new Button(){Content = "C",Uid = "C"});
+            ListButtonAction.Add(new Button(){Content = "C",Uid = "CbE"});
             ListButtonAction.Add(new Button(){Content = "⌫",Uid = "⌫"});
-            ListButtonAction.Add(new Button(){Content = "÷",Uid = "÷"});
-            ListButtonAction.Add(new Button(){Content = "x",Uid = "*"});
+            ListButtonAction.Add(new Button(){Content = "÷",Uid = "/"});
+            ListButtonAction.Add(new Button(){Content = "×",Uid = "*"});
             ListButtonAction.Add(new Button(){Content = "-",Uid = "-"});
             ListButtonAction.Add(new Button(){Content = "+",Uid = "+"});
             column = 1;
@@ -879,7 +895,7 @@ namespace calculator
             }
             var ListLabel = new List<Label>();
             ListLabel.Add(new Label(){Content = "HEX 0", Name = "HEX"});
-            ListLabel.Add(new Label(){Content = "DEC 0", Name = "DEC",FontWeight = FontWeights.Bold});
+            ListLabel.Add(new Label(){Content = "DEC 0", Name = "DEC",FontWeight = FontWeights.Bold,Foreground=(Brush)new BrushConverter().ConvertFrom("#1b96f3")});
             ListLabel.Add(new Label(){Content = "OCT 0", Name = "OCT"});
             ListLabel.Add(new Label(){Content = "BIN 0", Name = "BIN"});
             Grid.SetRow(ListLabel[0],2);
@@ -905,7 +921,16 @@ namespace calculator
                 label.Padding = new Thickness(0);
                 mainGrid.Children.Add(label);
             }
-
+            
+            var ADlabel = new Label(){Content = "Тут могла быть ваша реклама"};
+            Grid.SetRow(ADlabel,5);
+            Grid.SetColumn(ADlabel,1);
+            Grid.SetColumnSpan(ADlabel,3);
+            ADlabel.Margin = new Thickness(23,0,0,0);
+            ADlabel.FontSize = 24;
+            ADlabel.Foreground = (Brush)new BrushConverter().ConvertFrom("#c21111");
+            mainGrid.Children.Add(ADlabel);
+            
             Button Equally = new Button(){Content = "=",Uid = "=",FontSize = 20, Opacity = 0.75,
                 Margin = new Thickness(1.5),Background = (Brush)new BrushConverter().ConvertFrom("#ffb8c6"),
             };
@@ -953,12 +978,13 @@ namespace calculator
         {
             var TypeSystem = new Dictionary<string, int>()
             {
-                {"HEX", 16},
+                {"HEX", 10},
                 {"DEC", 10},
                 {"OCT", 8},
                 {"BIN", 2},
             };
-            var localNumber = number;
+            var localNumber = number.ToString();
+            ready = false;
             restart(all: true);
             foreach (Label label in FindVisualChildren<Label>(contol))
             {
@@ -981,7 +1007,7 @@ namespace calculator
                                 getButton("numberSeven").IsEnabled = true;
                                 getButton("numberEight").IsEnabled = true;
                                 getButton("numberNine").IsEnabled = true;
-                                double.TryParse( Conv(TypeSystem[numberSystem.Name], 16, number.ToString()).ToUpper(),out number);
+                                localNumber = Conv(TypeSystem[numberSystem.Name], 16, localNumber).ToUpper();
                                 break;
                             case "DEC":
                                 getButton("numberA").IsEnabled =false;
@@ -998,7 +1024,7 @@ namespace calculator
                                 getButton("numberSeven").IsEnabled = true;
                                 getButton("numberEight").IsEnabled = true;
                                 getButton("numberNine").IsEnabled =true;
-                                double.TryParse( Conv(TypeSystem[numberSystem.Name], 10, number.ToString()).ToUpper(),out number);
+                                localNumber = Conv(TypeSystem[numberSystem.Name], 10, localNumber).ToUpper();
                                 break;
                             case "OCT":
                                 getButton("numberA").IsEnabled =false;
@@ -1015,7 +1041,7 @@ namespace calculator
                                 getButton("numberSeven").IsEnabled = true;
                                 getButton("numberEight").IsEnabled = false;
                                 getButton("numberNine").IsEnabled =false;
-                                double.TryParse( Conv(TypeSystem[numberSystem.Name], 8, number.ToString()).ToUpper(),out number);
+                                localNumber = Conv(TypeSystem[numberSystem.Name], 8, localNumber).ToUpper();
                                 break;
                             case "BIN":
                                 getButton("numberA").IsEnabled = false;
@@ -1032,12 +1058,15 @@ namespace calculator
                                 getButton("numberSeven").IsEnabled = false;
                                 getButton("numberEight").IsEnabled = false;
                                 getButton("numberNine").IsEnabled = false;
-                                double.TryParse( Conv(TypeSystem[numberSystem.Name], 2, number.ToString()).ToUpper(),out number);
+                                localNumber = Conv(TypeSystem[numberSystem.Name], 2, localNumber).ToUpper();
                                 break;
                         }
+                    double.TryParse(label.Name=="HEX"?Conv(16,10,localNumber):localNumber,out number);
+                    numberSystem.Foreground = (Brush)new BrushConverter().ConvertFrom("#000000");
                     numberSystem.FontWeight = FontWeights.Normal;
-                     label.FontWeight = FontWeights.Bold;
-                     numberSystem = label;
+                    label.Foreground = (Brush)new BrushConverter().ConvertFrom("#1b96f3");
+                    label.FontWeight = FontWeights.Bold;
+                    numberSystem = label;
                 }
                 display();
             }
