@@ -475,7 +475,7 @@ namespace calculator
                 Expression eh = new Expression((example + (bracket?"":number==0?numberPast.ToString():number.ToString())).Replace(',', '.'));
                 double response;
                 double.TryParse(eh.calculate().ToString().Replace('.', ','),out response);
-                response = numberSystem.Name == "HEX" ? Math.Round(response, 0) : response;
+                response = programmerCalculator ? Math.Round(response, 0) : response;
                 //var response = new DataTable().Compute((example + number).Replace(',', '.'), null).ToString();
                 // var numberLocal = (bracket ? "" : number == 0 ? numberPast.ToString() : number.ToString());
                 // numberLocal = numberSystem.Name == "HEX" ? Conv(10, 16, numberLocal) : numberLocal;
