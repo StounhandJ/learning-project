@@ -762,7 +762,7 @@ namespace calculator
             ListButtonAction.Add(new Button(){Content = ")",Uid = ")"});
             ListButtonAction.Add(new Button(){Content = "x!",Uid = "fact"});
             ListButtonAction.Add(new Button(){Content = "÷",Uid = "/"});
-            ListButtonAction.Add(new Button(){Content = "x^y",Uid = "^"});
+            ListButtonAction.Add(new Button(){Content = "^",Uid = "^"});
             ListButtonAction.Add(new Button(){Content = "×",Uid = "*"});
             ListButtonAction.Add(new Button(){Content = "10^x",Uid = "10^"});
             ListButtonAction.Add(new Button(){Content = "-",Uid = "-"});
