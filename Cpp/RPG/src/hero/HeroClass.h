@@ -3,6 +3,7 @@
 #include <utility>
 #include <list>
 #include "src/skills/SkillClass.h"
+#include "src/artifacts/ArtifactClass.h"
 
 #ifndef RPG_HERO_H
 #define RPG_HERO_H
@@ -22,6 +23,20 @@ public:
     int getMagic_power() {return magic_power;}
     int getMana() {return mana;}
     int getGold() {return gold;}
+    int getDamageAll() {
+        int finalDamage = damage;
+        finalDamage+=ArtifactHelmet.getDamage();
+        finalDamage+=ArtifactArmor.getDamage();
+        finalDamage+=ArtifactHands.getDamage();
+        finalDamage+=ArtifactLegs.getDamage();
+        return finalDamage;}
+    int getDefenseAll() {int finalDefense = defense;
+        finalDefense+=ArtifactHelmet.getDefense();
+        finalDefense+=ArtifactArmor.getDefense();
+        finalDefense+=ArtifactHands.getDefense();
+        finalDefense+=ArtifactLegs.getDefense();
+        return finalDefense;}
+
 
     void death(){
         std::cout << "Персонаж умер" << std::endl;
@@ -29,7 +44,7 @@ public:
 
     void dealt_damage(int damage)
     {
-        HP-=damage;
+        HP-=(int)(damage*100 / (100 + (double)getDefenseAll()));
         check_death();
     }
 
@@ -42,13 +57,18 @@ public:
 
 
 protected:
-    explicit HeroClass(int HP=100, int level=1, int experience=0, int damage=0, int defense=0, int knowledge=0, int magic_power=0, int mana=0, int gold=100) :
-            HP(HP),level(level),experience(experience),damage(damage),defense(defense),knowledge(knowledge),magic_power(magic_power),mana(mana),gold(gold){
+    explicit HeroClass(int HP=100,int maxHP=100, int level=1, int experience=0, int damage=0, int defense=0, int knowledge=0, int magic_power=0, int mana=0, int gold=100) :
+            HP(HP), maxHP(maxHP), level(level),experience(experience),damage(damage),defense(defense),knowledge(knowledge),magic_power(magic_power),mana(mana),gold(gold){
 
     }
     std::string HeroName,
                 GradeName;
+    ArtifactClass ArtifactHelmet,
+            ArtifactArmor,
+            ArtifactHands,
+            ArtifactLegs;
     int HP{},
+        maxHP{},
         level{},
         experience{},
         damage{},
@@ -69,15 +89,14 @@ protected:
     {
         if (experience>=level*(100+(level*15))){
             experience-=level*(100+(level*15));
-            std::cout << experience << std::endl;
-            if (experience>0){
-                level+=1;
-                check_level();
-            } else{
-                level+=2;
-            }
-
+            up_level();
+            check_level();
         }
+    }
+
+    virtual void up_level()
+    {
+        level+=1;
     }
 
 };

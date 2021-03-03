@@ -1,6 +1,8 @@
 #include <iostream>
 #include <windows.h>
 #include <string>
+#include "src/artifacts/ArtifactClass.h"
+#include "src/hero/HeroClass.h"
 #include "src/hero/grade/WarriorClass.h"
 
 void clear(){
@@ -10,9 +12,8 @@ int main() {
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
     WarriorClass hero = WarriorClass("Tom");
-    hero.addExperience(300);
-    std::cout << "Уровень "+std::to_string(hero.getLevel()) << std::endl;
-    hero.addExperience(400);
-    std::cout << "Уровень "+std::to_string(hero.getLevel()) << std::endl;
+    std::cout << hero.getHP() << std::endl;
+    hero.dealt_damage(120);
+    std::cout << hero.getHP() << std::endl;
     return 0;
 }
