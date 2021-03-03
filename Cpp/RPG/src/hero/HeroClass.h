@@ -11,31 +11,57 @@
 
 class HeroClass {
 public:
-    std::string getHeroName() const{return HeroName;}
-    std::string getGradeName() const{return GradeName;}
-    std::list <SkillClass> getSkills() const{return skills;}
-    int getHP() {return HP;}
-    int getLevel() {return level;}
-    int getExperience() {return experience;}
-    int getDamage() {return damage;}
-    int getDefense() {return defense;}
-    int getKnowledge() {return knowledge;}
-    int getMagic_power() {return magic_power;}
-    int getMana() {return mana;}
-    int getGold() {return gold;}
+    std::string getHeroName() const{return this->HeroName;}
+    std::string getGradeName() const{return this->GradeName;}
+    std::list <SkillClass> getSkills() const{return this->skills;}
+    int getHP() {return this->HP;}
+    int getLevel() {return this->level;}
+    int getExperience() {return this->experience;}
+    int getDamage() {return this->damage;}
+    int getDefense() {return this->defense;}
+    int getKnowledge() {return this->knowledge;}
+    int getMagic_power() {return this->magic_power;}
+    int getMana() {return this->mana;}
+    int getGold() {return this->gold;}
+    std::list<ArtifactClass> getInventory() {return this->inventory;}
+    int getHPAll() {
+        int finalHP = this->maxHP;
+        finalHP+=ArtifactHelmet.getHP();
+        finalHP+=ArtifactArmor.getHP();
+        finalHP+=ArtifactHands.getHP();
+        finalHP+=ArtifactLegs.getHP();
+        return finalHP;}
     int getDamageAll() {
-        int finalDamage = damage;
+        int finalDamage = this->damage;
         finalDamage+=ArtifactHelmet.getDamage();
         finalDamage+=ArtifactArmor.getDamage();
         finalDamage+=ArtifactHands.getDamage();
         finalDamage+=ArtifactLegs.getDamage();
         return finalDamage;}
-    int getDefenseAll() {int finalDefense = defense;
+    int getDefenseAll() {int finalDefense = this->defense;
         finalDefense+=ArtifactHelmet.getDefense();
         finalDefense+=ArtifactArmor.getDefense();
         finalDefense+=ArtifactHands.getDefense();
         finalDefense+=ArtifactLegs.getDefense();
         return finalDefense;}
+    int getKnowledgeAll() {int finalKnowledge = this->knowledge;
+        finalKnowledge+=ArtifactHelmet.getKnowledge();
+        finalKnowledge+=ArtifactArmor.getKnowledge();
+        finalKnowledge+=ArtifactHands.getKnowledge();
+        finalKnowledge+=ArtifactLegs.getKnowledge();
+        return finalKnowledge;}
+    int getMagicPowerAll() {int finalMagicPower = this->magic_power;
+        finalMagicPower+=ArtifactHelmet.getMagicPower();
+        finalMagicPower+=ArtifactArmor.getMagicPower();
+        finalMagicPower+=ArtifactHands.getMagicPower();
+        finalMagicPower+=ArtifactLegs.getMagicPower();
+        return finalMagicPower;}
+    int getManaAll() {int finalMana = this->mana;
+        finalMana+=ArtifactHelmet.getMana();
+        finalMana+=ArtifactArmor.getMana();
+        finalMana+=ArtifactHands.getMana();
+        finalMana+=ArtifactLegs.getMana();
+        return finalMana;}
 
 
     void death(){
@@ -44,17 +70,51 @@ public:
 
     void dealt_damage(int damage)
     {
-        HP-=(int)(damage*100 / (100 + (double)getDefenseAll()));
-        check_death();
+        this->HP-=(int)(damage*100 / (100 + (double)getDefenseAll()));
+        this->check_death();
     }
 
-    void addExperience(int new_experience)
+    void heal(int heal_HP)
     {
-        experience+=new_experience;
-        check_level();
+        this->HP = heal_HP;
+        if (this->HP > this->getHPAll()){
+            this->HP = this->getHPAll();
+        }
     }
 
+    void setArtifactHelmet(const ArtifactClass& NewArtifactHelmet){
+        if (NewArtifactHelmet.getType()==HELMET){
+            this->inventory.push_back(this->ArtifactHelmet);
+            this->ArtifactHelmet= NewArtifactHelmet;
+        }
+    }
 
+    void setArtifactArmor(const ArtifactClass& NewArtifactArmor){
+        if (NewArtifactArmor.getType()==ARMOR){
+            this->inventory.push_back(this->ArtifactArmor);
+            this->ArtifactArmor= NewArtifactArmor;
+        }
+    }
+
+    void setArtifactHands(const ArtifactClass& NewArtifactHands){
+        if (NewArtifactHands.getType()==HANDS){
+            this->inventory.push_back(this->ArtifactHands);
+            this->ArtifactHands= NewArtifactHands;
+        }
+    }
+
+    void setArtifactLegs(const ArtifactClass& NewArtifactLegs){
+        if (NewArtifactLegs.getType()==LEGS){
+            this->inventory.push_back(this->ArtifactLegs);
+            this->ArtifactLegs= NewArtifactLegs;
+        }
+    }
+
+    void setSkill(const SkillClass& newSkill){
+        if (newSkill.getLevel()<=this->getLevel()){
+            this->skills.push_back(newSkill);
+        }
+    }
 
 protected:
     explicit HeroClass(int HP=100,int maxHP=100, int level=1, int experience=0, int damage=0, int defense=0, int knowledge=0, int magic_power=0, int mana=0, int gold=100) :
@@ -63,10 +123,11 @@ protected:
     }
     std::string HeroName,
                 GradeName;
-    ArtifactClass ArtifactHelmet,
-            ArtifactArmor,
-            ArtifactHands,
-            ArtifactLegs;
+    ArtifactClass ArtifactHelmet = ArtifactClass("Повязка", HELMET),
+            ArtifactArmor = ArtifactClass("Лохмотья", ARMOR),
+            ArtifactHands = ArtifactClass("Перчатки", HANDS),
+            ArtifactLegs = ArtifactClass("Лапти", LEGS);
+    std::list<ArtifactClass> inventory;
     int HP{},
         maxHP{},
         level{},
@@ -81,7 +142,7 @@ protected:
 
     void check_death(){
         if (HP<1){
-            death();
+            this->death();
         }
     }
 
@@ -89,8 +150,8 @@ protected:
     {
         if (experience>=level*(100+(level*15))){
             experience-=level*(100+(level*15));
-            up_level();
-            check_level();
+            this->up_level();
+            this->check_level();
         }
     }
 
