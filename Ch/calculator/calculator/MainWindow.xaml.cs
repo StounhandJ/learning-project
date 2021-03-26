@@ -468,10 +468,6 @@ namespace calculator
                 {
                     return;
                 }
-
-                var tes2 =
-                    (example + (bracket ? "" : number == 0 ? numberPast.ToString() : number.ToString())).Replace(',',
-                        '.');
                 Expression eh = new Expression((example + (bracket?"":number==0?numberPast.ToString():number.ToString())).Replace(',', '.'));
                 double response;
                 double.TryParse(eh.calculate().ToString().Replace('.', ','),out response);
@@ -621,7 +617,7 @@ namespace calculator
                 button.Background = (Brush)new BrushConverter().ConvertFrom("#ffffff");
                 button.FontSize = 20;
                 button.Opacity = 0.75;
-                if (button.Uid!="+/-")
+                if (button.Uid!="+/-" && button.Uid!=",")
                 {
                     button.Click += Number_OnClick;
                 }
@@ -736,7 +732,7 @@ namespace calculator
                 button.Background = (Brush)new BrushConverter().ConvertFrom("#ffffff");
                 button.FontSize = 20;
                 button.Opacity = 0.75;
-                if (button.Uid!="+/-")
+                if (button.Uid!="+/-" && button.Uid!=",")
                 {
                     button.Click += Number_OnClick;
                 }
@@ -858,7 +854,7 @@ namespace calculator
                 button.Background = (Brush)new BrushConverter().ConvertFrom("#ffffff");
                 button.FontSize = 20;
                 button.Opacity = 0.75;
-                if (button.Uid!="+/-")
+                if (button.Uid!="+/-" && button.Uid!=",")
                 {
                     button.Click += Number_OnClick;
                 }
