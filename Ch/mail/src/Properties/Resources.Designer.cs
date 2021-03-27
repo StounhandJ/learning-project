@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Pro.Properties
+namespace mail.Properties
 {
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -45,7 +45,7 @@ namespace Pro.Properties
                 if ((resourceMan == null))
                 {
                     global::System.Resources.ResourceManager temp =
-                        new global::System.Resources.ResourceManager("Pro.Properties.Resources",
+                        new global::System.Resources.ResourceManager("mail.Properties.Resources",
                             typeof(Resources).Assembly);
                     resourceMan = temp;
                 }

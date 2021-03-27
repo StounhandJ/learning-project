@@ -1,4 +1,4 @@
-﻿namespace Pro
+﻿namespace mail
 {
     /// <summary>
     /// Interaction logic for App.xaml

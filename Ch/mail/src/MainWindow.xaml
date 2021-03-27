@@ -1,0 +1,56 @@
+﻿<Window Name="coreForm" x:Class="mail.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:mail"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="300">
+    <Grid>
+         <Grid Name="EditMailMenu" HorizontalAlignment="Left" Height="420" Margin="-110,0,0,0" VerticalAlignment="Top" Width="793" Visibility="Hidden" IsEnabled="False">
+            <DockPanel Margin="251,108,148,72">
+                <ToolBar DockPanel.Dock="Top">
+                    <Separator />
+                    <ToggleButton Command="EditingCommands.ToggleBold" Name="btnBold" Content="B" FontWeight="Bold">
+                    </ToggleButton>
+                    <ToggleButton Command="EditingCommands.ToggleItalic" Name="btnItalic" Content="I" FontStyle="Italic">
+                    </ToggleButton>
+                    <ToggleButton Command="EditingCommands.ToggleUnderline" Name="btnUnderline" Content="U">
+                    </ToggleButton>
+                    <Separator />
+                    <ComboBox Name="cmbFontFamily" Width="150" SelectionChanged="cmbFontFamily_SelectionChanged" />
+                    <ComboBox Name="cmbFontSize" Width="50" TextBoxBase.TextChanged="cmbFontSize_TextChanged" />
+                    <ComboBox Name="alignment" Width="100" SelectionChanged="Alignment_TextChanged" />
+                </ToolBar>
+                <RichTextBox Name="rtbEditor" SelectionChanged="rtbEditor_SelectionChanged" />
+            </DockPanel>
+
+            <TextBox Name="toMail" IsEnabled="False" HorizontalAlignment="Left" Height="23" Margin="283,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="413"/>
+            <TextBox Name="whomMail" HorizontalAlignment="Left" Height="23" Margin="283,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="413"/>
+
+            <ListView HorizontalAlignment="Left" Height="240" Margin="143,108,0,0" VerticalAlignment="Top" Width="89"/>
+            <ListView Name="whomMailListLast" SelectionChanged="whomMailListLast_choiceElement" HorizontalAlignment="Left" Height="135" Margin="664,83,0,0" VerticalAlignment="Top" Width="107"/>
+            <ListView Name="whomMailList" SelectionChanged="whomMailList_choiceElement" HorizontalAlignment="Left" Height="135" Margin="664,245,0,0" VerticalAlignment="Top" Width="107"/>
+
+            <Button Content="Отправить" Click="Send_Click" HorizontalAlignment="Left" Margin="550,376,0,0" VerticalAlignment="Top" Width="95" Height="34"/>
+            <Button Content="Черновик" HorizontalAlignment="Left" Margin="251,376,0,0" VerticalAlignment="Top" Width="95" Height="34"/>
+            <Button Content="Доб.файл" HorizontalAlignment="Left" Margin="143,376,0,0" VerticalAlignment="Top" Width="89" Height="26"/>
+            <Button Content="+" Click="Add_user_to_Click" HorizontalAlignment="Left" Margin="713,38,0,0" VerticalAlignment="Top" Width="36" Height="23"/>
+            <Button Name="DeleteButton" Click="Delete_from_Click" IsEnabled="False" Content="Удалить" HorizontalAlignment="Left" Margin="664,391,0,0" VerticalAlignment="Top" Width="107"/>
+
+            <Label Content="От кого: " HorizontalAlignment="Left" Margin="220,7,0,0" VerticalAlignment="Top"/>
+            <Label Content="Кому: " HorizontalAlignment="Left" Margin="220,33,0,0" VerticalAlignment="Top" Height="29"/>
+
+        </Grid>
+
+        <Grid Name="LoginMenu" HorizontalAlignment="Left" Height="410" Margin="10,10,0,0" VerticalAlignment="Top" Width="304"  Visibility="Visible" IsEnabled="True">
+            <Button Click="Login_Click" Content="Войти" HorizontalAlignment="Left" Margin="83,290,0,0" VerticalAlignment="Top" Width="151" RenderTransformOrigin="-0.109,-0.24" Height="39"/>
+            <TextBox Name="LoginEmail" HorizontalAlignment="Left" Height="23" Margin="96,136,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+            <TextBox Name="LoginPassword" HorizontalAlignment="Left" Height="23" Margin="96,192,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.458,1.426"/>
+
+            <Label Content="Авторизация" HorizontalAlignment="Left" Margin="115,51,0,0" VerticalAlignment="Top"/>
+            <Label Content="Email" HorizontalAlignment="Left" Margin="28,132,0,0" VerticalAlignment="Top"/>
+            <Label Content="Password" HorizontalAlignment="Left" Margin="28,188,0,0" VerticalAlignment="Top"/>
+        </Grid>
+    </Grid>
+</Window>
