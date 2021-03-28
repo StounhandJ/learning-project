@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
 
@@ -19,10 +21,10 @@ namespace mail
         private List<string> filePathList = new List<string>();
 
         SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-        private bool debug = true;
+        private bool debug = false;
         private string pathFilesDirectory = Directory.GetCurrentDirectory() + "\\sendFile";
 
-        private MailClass draftMail = new MailClass();
+        private MailClass draftVersionMail = new MailClass();
         
         
         public MainWindow()
@@ -53,20 +55,25 @@ namespace mail
 
         private void Login_Click(object sender, RoutedEventArgs e)
         {
-            if (LoginEmail.Text=="" || LoginPassword.Text=="") return;
+            if (LoginEmail.Text=="" || LoginPassword.Password=="") return;
+            if (!isValidEmail(LoginEmail.Text))
+            {
+                showErrorLogin("Неверный формат email");
+                return;
+            }
             MailAddress from = new MailAddress(LoginEmail.Text, "Tom");
             MailAddress to = new MailAddress(LoginEmail.Text);
             MailMessage m = new MailMessage(from, to);
             m.Subject = "Успешная авторизация";
             m.Body = "";
             m.IsBodyHtml = true;
-            smtp.Credentials = new NetworkCredential(LoginEmail.Text, LoginPassword.Text);
+            smtp.Credentials = new NetworkCredential(LoginEmail.Text, LoginPassword.Password);
             smtp.EnableSsl = true;
             try
             {
                 smtp.Send(m);
                 userMail = LoginEmail.Text;
-                userPassword = LoginPassword.Text;
+                userPassword = LoginPassword.Password;
                 LoginMenu.Visibility = Visibility.Hidden;
                 LoginMenu.IsEnabled = false;
                 EditMailMenu.Visibility = Visibility.Visible;
@@ -76,7 +83,7 @@ namespace mail
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception);
+                showErrorLogin("Неверный email или пароль");
             }
             
         }
@@ -149,6 +156,7 @@ namespace mail
             string rtfString = File.ReadAllText(path);
             r.ImageStyle.IncludeImageInHtml = true;
             string text = r.ConvertString(rtfString);
+            if(isValidEmail(whomMail.Text)){whomMailList.Items.Add(whomMail.Text);}
             foreach (var vari in whomMailList.Items)
             {
                 whomMailListLast.Items.Add((string) vari);
@@ -158,27 +166,29 @@ namespace mail
             whomMailList.Items.Clear();
             rtbEditor.Document.Blocks.Clear();
             fileList.Items.Clear();
-        }
-
-        private void send_mes(string title, string text, List<string> fileList ,string to=null)
-        {
-            MailMessage m = new MailMessage(new MailAddress(userMail), new MailAddress(@to??userMail));
-            m.Subject = title;
-            m.Body = text;
-            m.IsBodyHtml = true;
-            foreach (var vari in fileList)
-            {
-                m.Attachments.Add(new Attachment(vari));
-            }
-            smtp.Credentials = new NetworkCredential(userMail, userPassword);
-            smtp.EnableSsl = true;
-            smtp.Send(m);
+            showErrorMain("");
         }
 
         private void Add_user_to_Click(object sender, RoutedEventArgs e)
         {
+            add_whomMail();
+        }
+        
+        private void WhomMail_OnKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter) add_whomMail();
+        }
+
+        private void add_whomMail()
+        {
+            if (!isValidEmail(whomMail.Text))
+            {
+                showErrorMain("Неверный формат email");
+                return;
+            }
             whomMailList.Items.Add(whomMail.Text);
             whomMail.Text = "";
+            showErrorMain("");
         }
 
         private void whomMailListLast_choiceElement(object sender, SelectionChangedEventArgs e)
@@ -189,6 +199,11 @@ namespace mail
         private void whomMailList_choiceElement(object sender, SelectionChangedEventArgs e)
         {
             DeleteButton.IsEnabled = true;
+        }
+        
+        private void fileList_choiceElement(object sender, SelectionChangedEventArgs e)
+        {
+            DeleteFileButton.IsEnabled = true;
         }
 
         private void Delete_from_Click(object sender, RoutedEventArgs e)
@@ -216,7 +231,29 @@ namespace mail
                 add_file(dlg.FileName, (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
             }
         }
+        
+        private void Del_file_Click(object sender, RoutedEventArgs e)
+        {
+            filePathList.Remove(((Label)fileList.SelectedItem).Uid);
+            fileList.Items.Remove(fileList.SelectedItem);
+            DeleteFileButton.IsEnabled = false;
+        }
 
+        private void send_mes(string title, string text, List<string> fileList ,string to=null)
+        {
+            MailMessage m = new MailMessage(new MailAddress(userMail), new MailAddress(@to??userMail));
+            m.Subject = title;
+            m.Body = text;
+            m.IsBodyHtml = true;
+            foreach (var vari in fileList)
+            {
+                m.Attachments.Add(new Attachment(vari));
+            }
+            smtp.Credentials = new NetworkCredential(userMail, userPassword);
+            smtp.EnableSsl = true;
+            smtp.Send(m);
+        }
+        
         private void add_file(string path, int time)
         {
             Directory.CreateDirectory(pathFilesDirectory+"\\"+time);
@@ -225,7 +262,24 @@ namespace mail
             string filePath = pathFilesDirectory+"\\"+time + "\\" + path.Split('\\').Last();
             File.Copy(path,filePath);
             filePathList.Add(filePath);
-            fileList.Items.Add(fileName);
+            fileList.Items.Add(new Label(){Content = fileName, Uid = filePath});
+        }
+        
+        bool isValidEmail(string email)
+        {
+            string pattern = "[.\\-_a-z0-9]+@([a-z0-9][\\-a-z0-9]+\\.)+[a-z]{2,6}";
+            Match isMatch = Regex.Match(email, pattern, RegexOptions.IgnoreCase);
+            return isMatch.Success;
+        }
+        
+        private void showErrorLogin(string error)
+        {
+            errorLabelLogin.Content = error;
+        }
+        
+        private void showErrorMain(string error)
+        {
+            errorLabelMain.Content = error;
         }
     }
 }
