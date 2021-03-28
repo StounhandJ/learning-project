@@ -21,8 +21,11 @@ namespace mail
         private List<string> filePathList = new List<string>();
 
         SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-        private bool debug = false;
-        private string pathFilesDirectory = Directory.GetCurrentDirectory() + "\\sendFile";
+        private bool debug = true;
+        private string path_TempDirectory = Directory.GetCurrentDirectory() + "\\Temp";
+        private string path_FilesDirectory = Directory.GetCurrentDirectory() + "\\Temp\\sendFile";
+        private string path_SendRtfFile = Directory.GetCurrentDirectory() + "\\Temp\\sendrtf.rtf";
+        private string path_DraftVersion_RtfFile = Directory.GetCurrentDirectory() + "\\Temp\\draftversionrtf.rtf";
 
         private MailClass draftVersionMail = new MailClass();
         
@@ -33,9 +36,9 @@ namespace mail
             cmbFontFamily.ItemsSource = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
             cmbFontSize.ItemsSource = new List<double>() { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72 };
             alignment.ItemsSource = new List<String>() { "Лево", "Центр", "Право", "Ширина"};
-            if (Directory.Exists(pathFilesDirectory))
+            if (Directory.Exists(path_TempDirectory))
             {
-                Directory.Delete(pathFilesDirectory, true);
+                Directory.Delete(path_TempDirectory, true);
             }
             if (debug)
             {
@@ -146,14 +149,14 @@ namespace mail
 
         private void Send_Click(object sender, RoutedEventArgs e)
         {
-            string path = Directory.GetCurrentDirectory() + "/ff.rtf";
-            FileStream fileStream = new FileStream(path, FileMode.Create);
+            Directory.CreateDirectory(path_TempDirectory);
+            FileStream fileStream = new FileStream(path_SendRtfFile, FileMode.Create);
             TextRange range = new TextRange(rtbEditor.Document.ContentStart, rtbEditor.Document.ContentEnd);
             range.Save(fileStream, DataFormats.Rtf);
             fileStream.Close();
             
             SautinSoft.RtfToHtml r = new SautinSoft.RtfToHtml();
-            string rtfString = File.ReadAllText(path);
+            string rtfString = File.ReadAllText(path_SendRtfFile);
             r.ImageStyle.IncludeImageInHtml = true;
             string text = r.ConvertString(rtfString);
             if(isValidEmail(whomMail.Text)){whomMailList.Items.Add(whomMail.Text);}
@@ -215,7 +218,7 @@ namespace mail
         private void FileDrop(object sender, DragEventArgs e)
         {
             int time = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            Directory.CreateDirectory(pathFilesDirectory);
+            Directory.CreateDirectory(path_FilesDirectory);
             if (e.Data != null)
                 foreach (var vari in (string[]) e.Data.GetData(DataFormats.FileDrop))
                 {
@@ -256,10 +259,10 @@ namespace mail
         
         private void add_file(string path, int time)
         {
-            Directory.CreateDirectory(pathFilesDirectory+"\\"+time);
+            Directory.CreateDirectory(path_FilesDirectory+"\\"+time);
                     
             string fileName = path.Split('\\').Last();
-            string filePath = pathFilesDirectory+"\\"+time + "\\" + path.Split('\\').Last();
+            string filePath = path_FilesDirectory+"\\"+time + "\\" + path.Split('\\').Last();
             File.Copy(path,filePath);
             filePathList.Add(filePath);
             fileList.Items.Add(new Label(){Content = fileName, Uid = filePath});
@@ -280,6 +283,52 @@ namespace mail
         private void showErrorMain(string error)
         {
             errorLabelMain.Content = error;
+        }
+
+        private void create_draftVersionMail_Click(object sender, RoutedEventArgs e)
+        {
+            draftVersionMail.filePathList = new List<string>();
+            draftVersionMail.whomMailList = new List<string>();
+            foreach (var vari in filePathList)
+            {
+                draftVersionMail.filePathList.Add(vari);
+            }
+            foreach (var vari in whomMailList.Items)
+            {
+                draftVersionMail.whomMailList.Add((string)vari);
+            }
+            Directory.CreateDirectory(path_TempDirectory);
+            FileStream fileStream = new FileStream(path_DraftVersion_RtfFile, FileMode.Create);
+            TextRange range = new TextRange(rtbEditor.Document.ContentStart, rtbEditor.Document.ContentEnd);
+            range.Save(fileStream, DataFormats.Rtf);
+            fileStream.Close();
+            draftVersionMail.textPath = path_DraftVersion_RtfFile;
+        }
+        
+        private void load_draftVersionMail_Click(object sender, RoutedEventArgs e)
+        {
+            filePathList = draftVersionMail.filePathList;
+            fileList.Items.Clear();
+            whomMailList.Items.Clear();
+            foreach (var path in filePathList)
+            {
+                fileList.Items.Add(new Label(){Content = path.Split('\\').Last(), Uid = path});
+            }
+            foreach (var vari in draftVersionMail.whomMailList)
+            {
+                whomMailList.Items.Add(vari);
+            }
+            TextRange range2 = new TextRange(rtbEditor.Document.ContentStart, rtbEditor.Document.ContentEnd);
+            FileStream fileStream2 = new FileStream(draftVersionMail.textPath, FileMode.Open);
+            range2.Load(fileStream2, DataFormats.Rtf);
+        }
+
+        private void Window_Unloaded(object sender, RoutedEventArgs e)
+        {
+            if (Directory.Exists(path_TempDirectory))
+            {
+                Directory.Delete(path_TempDirectory, true);
+            }
         }
     }
 }

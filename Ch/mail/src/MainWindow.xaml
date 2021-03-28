@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:mail"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="300">
+        Title="MainWindow" Height="450" Width="300"
+        Unloaded="Window_Unloaded">
     <Grid>
          <Grid  Name="EditMailMenu" HorizontalAlignment="Left" Height="420" Margin="-110,0,0,0" VerticalAlignment="Top" Width="793" Visibility="Hidden" IsEnabled="False">
             <DockPanel Margin="251,108,148,72">
@@ -33,8 +34,8 @@
             <ListView Name="whomMailList" SelectionChanged="whomMailList_choiceElement" HorizontalAlignment="Left" Height="135" Margin="664,245,0,0" VerticalAlignment="Top" Width="119"/>
 
             <Button Content="Отправить" Click="Send_Click" HorizontalAlignment="Left" Margin="550,376,0,0" VerticalAlignment="Top" Width="95" Height="34"/>
-            <Button Content="Создать Черновик" HorizontalAlignment="Left" Margin="251,358,0,0" VerticalAlignment="Top" Width="114" Height="22"/>
-            <Button Content="Загрузить Черновик" HorizontalAlignment="Left" Margin="370,358,0,0" VerticalAlignment="Top" Width="114" Height="22"/>
+            <Button Content="Создать Черновик" Click="create_draftVersionMail_Click" HorizontalAlignment="Left" Margin="251,358,0,0" VerticalAlignment="Top" Width="114" Height="22"/>
+            <Button Content="Загрузить Черновик" Click="load_draftVersionMail_Click" HorizontalAlignment="Left" Margin="370,358,0,0" VerticalAlignment="Top" Width="114" Height="22"/>
 
             <Button Content="Доб.файл" Click="Add_file_Click" HorizontalAlignment="Left" Margin="121,367,0,0" VerticalAlignment="Top" Width="111" Height="19" RenderTransformOrigin="4.856,0.954"/>
             <Button Content="Удл.файл" Name="DeleteFileButton" Click="Del_file_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="121,391,0,0" VerticalAlignment="Top" Width="111" Height="19" RenderTransformOrigin="4.856,0.954"/>

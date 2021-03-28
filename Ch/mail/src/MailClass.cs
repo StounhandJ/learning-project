@@ -5,14 +5,9 @@ namespace mail
 {
     public class MailClass
     {
-        private string text { get; set; }
+        public string textPath { get; set; }
         
-        private List<string> whomMailList { get; set; }
-        
-        private List<string> whomMailListLast { get; set; }
-        
-        private List<string> filePathList { get; set; }
-
-
+        public List<string> whomMailList { get; set; }
+        public List<string> filePathList { get; set; }
     }
 }
