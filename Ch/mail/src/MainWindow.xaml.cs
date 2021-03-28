@@ -8,29 +8,47 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using Microsoft.Win32;
 
 namespace mail
 {
     public partial class MainWindow
     {
-        private string userMail = "tester.mpt@gmail.com";
-        private string userPassword = "7157725R";
+        private string userMail;
+        private string userPassword;
+        private List<string> filePathList = new List<string>();
+
         SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+        private bool debug = true;
+        private string pathFilesDirectory = Directory.GetCurrentDirectory() + "\\sendFile";
+
+        private MailClass draftMail = new MailClass();
+        
         
         public MainWindow()
         {
-            // MailAddress from = new MailAddress("tester.mpt@gmail.com", "Tom");
-            // MailAddress to = new MailAddress("tester.mpt@gmail.com");
-            // MailMessage m = new MailMessage(from, to);
-            // m.Subject = "Тест";
-            // m.Body = "<h2>Письмо-тест работы smtp-клиента</h2>";
-            // m.IsBodyHtml = true;
-            
-            
             InitializeComponent();
             cmbFontFamily.ItemsSource = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
             cmbFontSize.ItemsSource = new List<double>() { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72 };
             alignment.ItemsSource = new List<String>() { "Лево", "Центр", "Право", "Ширина"};
+            if (Directory.Exists(pathFilesDirectory))
+            {
+                Directory.Delete(pathFilesDirectory, true);
+            }
+            if (debug)
+            {
+                coreForm.Width = 700;
+                EditMailMenu.Visibility = Visibility.Visible;
+                EditMailMenu.IsEnabled = true;
+
+                LoginMenu.Visibility = Visibility.Hidden;
+                LoginMenu.IsEnabled = false;
+                
+                userMail = "tester.mpt@gmail.com";
+                userPassword = "7157725R";
+                
+                toMail.Text = userMail;
+            }
         }
 
         private void Login_Click(object sender, RoutedEventArgs e)
@@ -44,7 +62,6 @@ namespace mail
             m.IsBodyHtml = true;
             smtp.Credentials = new NetworkCredential(LoginEmail.Text, LoginPassword.Text);
             smtp.EnableSsl = true;
-            //"tester.mpt@gmail.com", "7157725R"
             try
             {
                 smtp.Send(m);
@@ -132,23 +149,27 @@ namespace mail
             string rtfString = File.ReadAllText(path);
             r.ImageStyle.IncludeImageInHtml = true;
             string text = r.ConvertString(rtfString);
-            whomMailListLast.Items.Clear();
             foreach (var vari in whomMailList.Items)
             {
                 whomMailListLast.Items.Add((string) vari);
-                send_mes("Новое письмо", text,(string)vari);
+                send_mes("Новое письмо", text, filePathList,(string)vari);
             }
             
             whomMailList.Items.Clear();
             rtbEditor.Document.Blocks.Clear();
+            fileList.Items.Clear();
         }
 
-        private void send_mes(string title, string text, string to=null)
+        private void send_mes(string title, string text, List<string> fileList ,string to=null)
         {
             MailMessage m = new MailMessage(new MailAddress(userMail), new MailAddress(@to??userMail));
             m.Subject = title;
             m.Body = text;
             m.IsBodyHtml = true;
+            foreach (var vari in fileList)
+            {
+                m.Attachments.Add(new Attachment(vari));
+            }
             smtp.Credentials = new NetworkCredential(userMail, userPassword);
             smtp.EnableSsl = true;
             smtp.Send(m);
@@ -174,6 +195,37 @@ namespace mail
         {
             whomMailList.Items.Remove(whomMailList.SelectedItem);
             DeleteButton.IsEnabled = false;
+        }
+
+        private void FileDrop(object sender, DragEventArgs e)
+        {
+            int time = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            Directory.CreateDirectory(pathFilesDirectory);
+            if (e.Data != null)
+                foreach (var vari in (string[]) e.Data.GetData(DataFormats.FileDrop))
+                {
+                    add_file(vari, time);
+                }
+        }
+
+        private void Add_file_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            if (dlg.ShowDialog() == true)
+            {
+                add_file(dlg.FileName, (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
+            }
+        }
+
+        private void add_file(string path, int time)
+        {
+            Directory.CreateDirectory(pathFilesDirectory+"\\"+time);
+                    
+            string fileName = path.Split('\\').Last();
+            string filePath = pathFilesDirectory+"\\"+time + "\\" + path.Split('\\').Last();
+            File.Copy(path,filePath);
+            filePathList.Add(filePath);
+            fileList.Items.Add(fileName);
         }
     }
 }

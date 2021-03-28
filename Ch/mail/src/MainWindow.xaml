@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="300">
     <Grid>
-         <Grid Name="EditMailMenu" HorizontalAlignment="Left" Height="420" Margin="-110,0,0,0" VerticalAlignment="Top" Width="793" Visibility="Hidden" IsEnabled="False">
+         <Grid  Name="EditMailMenu" HorizontalAlignment="Left" Height="420" Margin="-110,0,0,0" VerticalAlignment="Top" Width="793" Visibility="Hidden" IsEnabled="False">
             <DockPanel Margin="251,108,148,72">
                 <ToolBar DockPanel.Dock="Top">
                     <Separator />
@@ -28,20 +28,19 @@
             <TextBox Name="toMail" IsEnabled="False" HorizontalAlignment="Left" Height="23" Margin="283,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="413"/>
             <TextBox Name="whomMail" HorizontalAlignment="Left" Height="23" Margin="283,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="413"/>
 
-            <ListView HorizontalAlignment="Left" Height="240" Margin="143,108,0,0" VerticalAlignment="Top" Width="89"/>
+            <ListView Name="fileList" AllowDrop="True" Drop="FileDrop" HorizontalAlignment="Left" Height="240" Margin="143,108,0,0" VerticalAlignment="Top" Width="89"/>
             <ListView Name="whomMailListLast" SelectionChanged="whomMailListLast_choiceElement" HorizontalAlignment="Left" Height="135" Margin="664,83,0,0" VerticalAlignment="Top" Width="107"/>
             <ListView Name="whomMailList" SelectionChanged="whomMailList_choiceElement" HorizontalAlignment="Left" Height="135" Margin="664,245,0,0" VerticalAlignment="Top" Width="107"/>
 
             <Button Content="Отправить" Click="Send_Click" HorizontalAlignment="Left" Margin="550,376,0,0" VerticalAlignment="Top" Width="95" Height="34"/>
             <Button Content="Черновик" HorizontalAlignment="Left" Margin="251,376,0,0" VerticalAlignment="Top" Width="95" Height="34"/>
-            <Button Content="Доб.файл" HorizontalAlignment="Left" Margin="143,376,0,0" VerticalAlignment="Top" Width="89" Height="26"/>
+            <Button Content="Доб.файл" Click="Add_file_Click" HorizontalAlignment="Left" Margin="143,376,0,0" VerticalAlignment="Top" Width="89" Height="26"/>
             <Button Content="+" Click="Add_user_to_Click" HorizontalAlignment="Left" Margin="713,38,0,0" VerticalAlignment="Top" Width="36" Height="23"/>
             <Button Name="DeleteButton" Click="Delete_from_Click" IsEnabled="False" Content="Удалить" HorizontalAlignment="Left" Margin="664,391,0,0" VerticalAlignment="Top" Width="107"/>
 
             <Label Content="От кого: " HorizontalAlignment="Left" Margin="220,7,0,0" VerticalAlignment="Top"/>
             <Label Content="Кому: " HorizontalAlignment="Left" Margin="220,33,0,0" VerticalAlignment="Top" Height="29"/>
-
-        </Grid>
+         </Grid>
 
         <Grid Name="LoginMenu" HorizontalAlignment="Left" Height="410" Margin="10,10,0,0" VerticalAlignment="Top" Width="304"  Visibility="Visible" IsEnabled="True">
             <Button Click="Login_Click" Content="Войти" HorizontalAlignment="Left" Margin="83,290,0,0" VerticalAlignment="Top" Width="151" RenderTransformOrigin="-0.109,-0.24" Height="39"/>
