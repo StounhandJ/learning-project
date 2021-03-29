@@ -35,7 +35,7 @@
             <ListView Name="whomMailListLast" SelectionChanged="whomMailListLast_choiceElement" HorizontalAlignment="Left" Height="135" Margin="664,83,0,0" VerticalAlignment="Top" Width="119"/>
             <ListView Name="whomMailList" SelectionChanged="whomMailList_choiceElement" HorizontalAlignment="Left" Height="135" Margin="664,245,0,0" VerticalAlignment="Top" Width="119"/>
 
-            <Button Content="Отправить" Click="Send_Click" HorizontalAlignment="Left" Margin="550,376,0,0" VerticalAlignment="Top" Width="95" Height="34"/>
+            <Button Content="Отправить" Name="SendButton" Click="Send_Click" HorizontalAlignment="Left" Margin="550,376,0,0" VerticalAlignment="Top" Width="95" Height="34"/>
             <Button Content="Создать Черновик" Click="create_draftVersionMail_Click" HorizontalAlignment="Left" Margin="251,358,0,0" VerticalAlignment="Top" Width="114" Height="22"/>
             <Button Content="Загрузить Черновик" Click="load_draftVersionMail_Click" Name="ButtonLoadDraft" IsEnabled="False" HorizontalAlignment="Left" Margin="370,358,0,0" VerticalAlignment="Top" Width="114" Height="22"/>
 
@@ -49,6 +49,7 @@
             <Label Content="Кому: " HorizontalAlignment="Left" Margin="220,33,0,0" VerticalAlignment="Top" Height="29"/>
             <Label Name="errorLabelMain" Foreground="Red" HorizontalAlignment="Left" Margin="283,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.517,0.026" Width="350"/>
 
+            <ProgressBar Name="ProgressSend" HorizontalAlignment="Left" Visibility="Hidden" Height="7" Margin="110,0,-12,0" VerticalAlignment="Top" Width="695"/>
          </Grid>
 
         <Grid Name="LoginMenu" HorizontalAlignment="Left" Height="410" Margin="10,10,0,0" VerticalAlignment="Top" Width="304"  Visibility="Visible" IsEnabled="True">

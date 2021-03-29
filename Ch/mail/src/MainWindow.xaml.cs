@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -158,33 +159,67 @@ namespace mail
                 // ignored
             }
         }
+        
+        // ----Отправка письма---- //
 
         private void Send_Click(object sender, RoutedEventArgs e)
         {
-            bool send = false;
+            SendButton.IsEnabled = false;
+            ProgressSend.Visibility = Visibility.Visible;
+            
             Directory.CreateDirectory(path_TempDirectory);
             FileStream fileStream = new FileStream(path_SendRtfFile, FileMode.Create);
             TextRange range = new TextRange(rtbEditor.Document.ContentStart, rtbEditor.Document.ContentEnd);
             range.Save(fileStream, DataFormats.Rtf);
             fileStream.Close();
+            if (isValidEmail(whomMail.Text)) {whomMailList.Items.Add(whomMail.Text);}
             
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.WorkerReportsProgress = true;
+            worker.DoWork += worker_DoWork;
+            worker.ProgressChanged += worker_ProgressChanged;
+            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+            worker.RunWorkerAsync();
+        }
+        
+        void worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            bool send = false;
             SautinSoft.RtfToHtml r = new SautinSoft.RtfToHtml();
             string rtfString = File.ReadAllText(path_SendRtfFile);
             r.ImageStyle.IncludeImageInHtml = true;
             string text = r.ConvertString(rtfString);
-            if(isValidEmail(whomMail.Text)){whomMailList.Items.Add(whomMail.Text);}
+            int n = 1;
             foreach (var vari in whomMailList.Items)
             {
-                if (!IsEmptyListView(whomMailListLast, (string)vari))
-                {
-                    whomMailListLast.Items.Add((string) vari);
-                }
+                int progressPercentage = Convert.ToInt32(((double)n++ / whomMailList.Items.Count) * 100);
+                (sender as BackgroundWorker).ReportProgress(progressPercentage);
                 send_mes("Новое письмо", text, filePathList,(string)vari);
                 send = true;
+                System.Threading.Thread.Sleep(1000);
+
             }
 
-            if (send)
+            e.Result = send;
+
+        }
+
+        void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            ProgressSend.Value = e.ProgressPercentage;
+        }
+        
+        void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if ((bool)e.Result)
             {
+                foreach (var vari in whomMailList.Items)
+                {
+                    if (!IsEmptyListView(whomMailListLast, (string)vari))
+                    {
+                        whomMailListLast.Items.Add((string) vari);
+                    }
+                }
                 whomMailList.Items.Clear();
                 rtbEditor.Document.Blocks.Clear();
                 fileList.Items.Clear();
@@ -194,7 +229,11 @@ namespace mail
             {
                 showErrorMain("Вы не указали получателей");
             }
+            ProgressSend.Visibility = Visibility.Hidden;
+            SendButton.IsEnabled = true;
         }
+        
+        // -------------------- //
 
         private void Add_user_to_Click(object sender, RoutedEventArgs e)
         {
