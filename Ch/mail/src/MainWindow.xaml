@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:mail"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="300"
-        Unloaded="Window_Unloaded">
+        Title="MainWindow" 
+        Height="450" Width="300"
+        ResizeMode="NoResize"
+        Closed="MainWindow_OnClosed">
     <Grid>
          <Grid  Name="EditMailMenu" HorizontalAlignment="Left" Height="420" Margin="-110,0,0,0" VerticalAlignment="Top" Width="793" Visibility="Hidden" IsEnabled="False">
             <DockPanel Margin="251,108,148,72">
@@ -19,11 +21,11 @@
                     <ToggleButton Command="EditingCommands.ToggleUnderline" Name="btnUnderline" Content="U">
                     </ToggleButton>
                     <Separator />
-                    <ComboBox Name="cmbFontFamily" Width="150" SelectionChanged="cmbFontFamily_SelectionChanged" />
-                    <ComboBox Name="cmbFontSize" Width="50" TextBoxBase.TextChanged="cmbFontSize_TextChanged" />
-                    <ComboBox Name="alignment" Width="100" SelectionChanged="Alignment_TextChanged" />
+                    <ComboBox Name="cmbFontFamily" Width="150" IsEnabled="False" SelectionChanged="cmbFontFamily_SelectionChanged" />
+                    <ComboBox Name="cmbFontSize" Width="50" IsEditable="True" TextBoxBase.TextChanged="cmbFontSize_TextChanged" />
+                    <ComboBox Name="alignment" Width="100" IsEnabled="False" SelectionChanged="Alignment_TextChanged" />
                 </ToolBar>
-                <RichTextBox Name="rtbEditor" SelectionChanged="rtbEditor_SelectionChanged" />
+                <RichTextBox Name="rtbEditor" LostFocus="RtbEditor_OnLostFocus" GotFocus="RtbEditor_OnGotFocus" SelectionChanged="rtbEditor_SelectionChanged" />
             </DockPanel>
 
             <TextBox Name="toMail" IsEnabled="False" HorizontalAlignment="Left" Height="23" Margin="283,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="413"/>
@@ -35,19 +37,19 @@
 
             <Button Content="Отправить" Click="Send_Click" HorizontalAlignment="Left" Margin="550,376,0,0" VerticalAlignment="Top" Width="95" Height="34"/>
             <Button Content="Создать Черновик" Click="create_draftVersionMail_Click" HorizontalAlignment="Left" Margin="251,358,0,0" VerticalAlignment="Top" Width="114" Height="22"/>
-            <Button Content="Загрузить Черновик" Click="load_draftVersionMail_Click" HorizontalAlignment="Left" Margin="370,358,0,0" VerticalAlignment="Top" Width="114" Height="22"/>
+            <Button Content="Загрузить Черновик" Click="load_draftVersionMail_Click" Name="ButtonLoadDraft" IsEnabled="False" HorizontalAlignment="Left" Margin="370,358,0,0" VerticalAlignment="Top" Width="114" Height="22"/>
 
             <Button Content="Доб.файл" Click="Add_file_Click" HorizontalAlignment="Left" Margin="121,367,0,0" VerticalAlignment="Top" Width="111" Height="19" RenderTransformOrigin="4.856,0.954"/>
             <Button Content="Удл.файл" Name="DeleteFileButton" Click="Del_file_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="121,391,0,0" VerticalAlignment="Top" Width="111" Height="19" RenderTransformOrigin="4.856,0.954"/>
 
-            <Button Content="+" Click="Add_user_to_Click" HorizontalAlignment="Left" Margin="713,38,0,0" VerticalAlignment="Top" Width="36" Height="23"/>
+            <Button Name="ButtonAdd_user" Content="+" Click="Add_user_to_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="713,38,0,0" VerticalAlignment="Top" Width="36" Height="23"/>
             <Button Name="DeleteButton" Click="Delete_from_Click" IsEnabled="False" Content="Удалить" HorizontalAlignment="Left" Margin="664,391,0,0" VerticalAlignment="Top" Width="107"/>
 
             <Label Content="От кого: " HorizontalAlignment="Left" Margin="220,7,0,0" VerticalAlignment="Top"/>
             <Label Content="Кому: " HorizontalAlignment="Left" Margin="220,33,0,0" VerticalAlignment="Top" Height="29"/>
-            <Label Name="errorLabelMain" Foreground="Red" HorizontalAlignment="Left" Margin="283,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.517,0.026" Width="137"/>
+            <Label Name="errorLabelMain" Foreground="Red" HorizontalAlignment="Left" Margin="283,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.517,0.026" Width="350"/>
 
-        </Grid>
+         </Grid>
 
         <Grid Name="LoginMenu" HorizontalAlignment="Left" Height="410" Margin="10,10,0,0" VerticalAlignment="Top" Width="304"  Visibility="Visible" IsEnabled="True">
             <Button Click="Login_Click" Content="Войти" HorizontalAlignment="Left" Margin="67,291,0,0" VerticalAlignment="Top" Width="151" RenderTransformOrigin="-0.109,-0.24" Height="39"/>
@@ -57,7 +59,7 @@
             <Label Content="Авторизация" HorizontalAlignment="Left" Margin="115,51,0,0" VerticalAlignment="Top"/>
             <Label Content="Email" HorizontalAlignment="Left" Margin="28,132,0,0" VerticalAlignment="Top"/>
             <Label Content="Password" HorizontalAlignment="Left" Margin="28,188,0,0" VerticalAlignment="Top"/>
-            <Label Name="errorLabelLogin" Foreground="Red" HorizontalAlignment="Left" Margin="114,220,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.517,0.026" Width="137"/>
+            <Label Name="errorLabelLogin" Foreground="Red" HorizontalAlignment="Left" Margin="70,220,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.517,0.026" Width="180"/>
 
         </Grid>
     </Grid>

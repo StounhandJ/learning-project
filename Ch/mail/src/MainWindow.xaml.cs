@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -22,12 +23,13 @@ namespace mail
 
         SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
         private bool debug = true;
-        private string path_TempDirectory = Directory.GetCurrentDirectory() + "\\Temp";
-        private string path_FilesDirectory = Directory.GetCurrentDirectory() + "\\Temp\\sendFile";
-        private string path_SendRtfFile = Directory.GetCurrentDirectory() + "\\Temp\\sendrtf.rtf";
-        private string path_DraftVersion_RtfFile = Directory.GetCurrentDirectory() + "\\Temp\\draftversionrtf.rtf";
+        private static string path_TempDirectory = Directory.GetCurrentDirectory() + "\\Temp";
+        private static string path_FilesDirectory = path_TempDirectory+"\\sendFile";
+        private static string path_SendRtfFile = path_TempDirectory+"\\sendrtf.rtf";
+        private static string path_DraftVersion_RtfFile = path_TempDirectory+"\\draftversionrtf.rtf";
 
         private MailClass draftVersionMail = new MailClass();
+        private bool IsDraftVersionMail = false;
         
         
         public MainWindow()
@@ -97,9 +99,12 @@ namespace mail
                 rtbEditor.Selection.ApplyPropertyValue(Inline.FontFamilyProperty, cmbFontFamily.SelectedItem);
         }
         
-        private void cmbFontSize_TextChanged(object sender, TextChangedEventArgs e)
+        private void cmbFontSize_TextChanged(object sender, TextChangedEventArgs textChangedEventArgs)
         {
-            rtbEditor.Selection.ApplyPropertyValue(Inline.FontSizeProperty, cmbFontSize.Text);
+            if (Int32.TryParse(cmbFontSize.Text, out int n))
+            {
+                rtbEditor.Selection.ApplyPropertyValue(Inline.FontSizeProperty, cmbFontSize.Text);
+            }
         }
         
         private void Alignment_TextChanged(object sender, SelectionChangedEventArgs e)
@@ -121,34 +126,42 @@ namespace mail
         
         private void rtbEditor_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            object temp = rtbEditor.Selection.GetPropertyValue(Inline.FontWeightProperty);
-            btnBold.IsChecked = (temp != DependencyProperty.UnsetValue) && (temp.Equals(FontWeights.Bold));
-            temp = rtbEditor.Selection.GetPropertyValue(Inline.FontStyleProperty);
-            btnItalic.IsChecked = (temp != DependencyProperty.UnsetValue) && (temp.Equals(FontStyles.Italic));
-            temp = rtbEditor.Selection.GetPropertyValue(Inline.FontFamilyProperty);
-            cmbFontFamily.SelectedItem = temp;
-            temp = rtbEditor.Selection.GetPropertyValue(Inline.FontSizeProperty);
-            cmbFontSize.Text = temp.ToString();
-            temp = rtbEditor.Selection.GetPropertyValue(Paragraph.TextAlignmentProperty);
-            switch ((TextAlignment)temp)
+            try
             {
-                case TextAlignment.Left:
-                    alignment.SelectedIndex = 0;
-                    break;
-                case TextAlignment.Center:
-                    alignment.SelectedIndex = 1;
-                    break;
-                case TextAlignment.Right:
-                    alignment.SelectedIndex = 2;
-                    break;
-                case TextAlignment.Justify:
-                    alignment.SelectedIndex = 3;
-                    break;
+                object temp = rtbEditor.Selection.GetPropertyValue(Inline.FontWeightProperty);
+                btnBold.IsChecked = (temp != DependencyProperty.UnsetValue) && (temp.Equals(FontWeights.Bold));
+                temp = rtbEditor.Selection.GetPropertyValue(Inline.FontStyleProperty);
+                btnItalic.IsChecked = (temp != DependencyProperty.UnsetValue) && (temp.Equals(FontStyles.Italic));
+                temp = rtbEditor.Selection.GetPropertyValue(Inline.FontFamilyProperty);
+                cmbFontFamily.SelectedItem = temp;
+                temp = rtbEditor.Selection.GetPropertyValue(Inline.FontSizeProperty);
+                cmbFontSize.Text = temp.ToString()!="{DependencyProperty.UnsetValue}"?temp.ToString():"";
+                temp = rtbEditor.Selection.GetPropertyValue(Paragraph.TextAlignmentProperty);
+                switch ((TextAlignment)temp)
+                {
+                    case TextAlignment.Left:
+                        alignment.SelectedIndex = 0;
+                        break;
+                    case TextAlignment.Center:
+                        alignment.SelectedIndex = 1;
+                        break;
+                    case TextAlignment.Right:
+                        alignment.SelectedIndex = 2;
+                        break;
+                    case TextAlignment.Justify:
+                        alignment.SelectedIndex = 3;
+                        break;
+                }
+            }
+            catch (Exception exception)
+            {
+                // ignored
             }
         }
 
         private void Send_Click(object sender, RoutedEventArgs e)
         {
+            bool send = false;
             Directory.CreateDirectory(path_TempDirectory);
             FileStream fileStream = new FileStream(path_SendRtfFile, FileMode.Create);
             TextRange range = new TextRange(rtbEditor.Document.ContentStart, rtbEditor.Document.ContentEnd);
@@ -162,14 +175,25 @@ namespace mail
             if(isValidEmail(whomMail.Text)){whomMailList.Items.Add(whomMail.Text);}
             foreach (var vari in whomMailList.Items)
             {
-                whomMailListLast.Items.Add((string) vari);
+                if (!IsEmptyListView(whomMailListLast, (string)vari))
+                {
+                    whomMailListLast.Items.Add((string) vari);
+                }
                 send_mes("Новое письмо", text, filePathList,(string)vari);
+                send = true;
             }
-            
-            whomMailList.Items.Clear();
-            rtbEditor.Document.Blocks.Clear();
-            fileList.Items.Clear();
-            showErrorMain("");
+
+            if (send)
+            {
+                whomMailList.Items.Clear();
+                rtbEditor.Document.Blocks.Clear();
+                fileList.Items.Clear();
+                showErrorMain("");
+            }
+            else
+            {
+                showErrorMain("Вы не указали получателей");
+            }
         }
 
         private void Add_user_to_Click(object sender, RoutedEventArgs e)
@@ -180,7 +204,8 @@ namespace mail
         private void WhomMail_OnKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Enter) add_whomMail();
-        }
+            ButtonAdd_user.IsEnabled = isValidEmail(whomMail.Text);
+            }
 
         private void add_whomMail()
         {
@@ -189,9 +214,19 @@ namespace mail
                 showErrorMain("Неверный формат email");
                 return;
             }
+
+            
+            if (IsEmptyListView(whomMailList, whomMail.Text))
+            {
+                whomMail.Text = "";
+                showErrorMain("");
+                ButtonAdd_user.IsEnabled = false;
+                return;
+            }
             whomMailList.Items.Add(whomMail.Text);
             whomMail.Text = "";
             showErrorMain("");
+            ButtonAdd_user.IsEnabled = false;
         }
 
         private void whomMailListLast_choiceElement(object sender, SelectionChangedEventArgs e)
@@ -217,6 +252,7 @@ namespace mail
 
         private void FileDrop(object sender, DragEventArgs e)
         {
+            showErrorMain("");
             int time = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             Directory.CreateDirectory(path_FilesDirectory);
             if (e.Data != null)
@@ -228,6 +264,7 @@ namespace mail
 
         private void Add_file_Click(object sender, RoutedEventArgs e)
         {
+            showErrorMain("");
             OpenFileDialog dlg = new OpenFileDialog();
             if (dlg.ShowDialog() == true)
             {
@@ -259,6 +296,12 @@ namespace mail
         
         private void add_file(string path, int time)
         {
+            long size = new System.IO.FileInfo(path).Length;
+            if (size>2200*1024)
+            {
+                showErrorMain("Один из файлов больше 2мб, он не был добавлен");
+                return;
+            }
             Directory.CreateDirectory(path_FilesDirectory+"\\"+time);
                     
             string fileName = path.Split('\\').Last();
@@ -287,12 +330,8 @@ namespace mail
 
         private void create_draftVersionMail_Click(object sender, RoutedEventArgs e)
         {
-            draftVersionMail.filePathList = new List<string>();
+            draftVersionMail.filePathList = filePathList.GetRange(0, filePathList.Count);
             draftVersionMail.whomMailList = new List<string>();
-            foreach (var vari in filePathList)
-            {
-                draftVersionMail.filePathList.Add(vari);
-            }
             foreach (var vari in whomMailList.Items)
             {
                 draftVersionMail.whomMailList.Add((string)vari);
@@ -303,11 +342,13 @@ namespace mail
             range.Save(fileStream, DataFormats.Rtf);
             fileStream.Close();
             draftVersionMail.textPath = path_DraftVersion_RtfFile;
+            ButtonLoadDraft.IsEnabled = true;
         }
         
         private void load_draftVersionMail_Click(object sender, RoutedEventArgs e)
         {
-            filePathList = draftVersionMail.filePathList;
+            showErrorMain("");
+            filePathList = draftVersionMail.filePathList.GetRange(0,draftVersionMail.filePathList.Count);
             fileList.Items.Clear();
             whomMailList.Items.Clear();
             foreach (var path in filePathList)
@@ -318,17 +359,50 @@ namespace mail
             {
                 whomMailList.Items.Add(vari);
             }
-            TextRange range2 = new TextRange(rtbEditor.Document.ContentStart, rtbEditor.Document.ContentEnd);
-            FileStream fileStream2 = new FileStream(draftVersionMail.textPath, FileMode.Open);
-            range2.Load(fileStream2, DataFormats.Rtf);
+
+            if (File.Exists(draftVersionMail.textPath))
+            {
+                TextRange range = new TextRange(rtbEditor.Document.ContentStart, rtbEditor.Document.ContentEnd);
+                FileStream fileStream = new FileStream(draftVersionMail.textPath, FileMode.Open);
+                range.Load(fileStream, DataFormats.Rtf);
+                fileStream.Close();
+            }
         }
 
-        private void Window_Unloaded(object sender, RoutedEventArgs e)
+        private void RtbEditor_OnGotFocus(object sender, RoutedEventArgs e)
+        {
+            cmbFontFamily.IsEnabled = true;
+            cmbFontSize.IsEnabled = true;
+            alignment.IsEnabled = true;
+        }
+
+        private void RtbEditor_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            cmbFontFamily.IsEnabled = false;
+            cmbFontSize.IsEnabled = false;
+            alignment.IsEnabled = false;
+        }
+
+        private void MainWindow_OnClosed(object sender, EventArgs e)
         {
             if (Directory.Exists(path_TempDirectory))
             {
                 Directory.Delete(path_TempDirectory, true);
             }
+        }
+
+        private bool IsEmptyListView(ListView list, string element)
+        {
+            foreach (string vari in list.Items)
+            {
+                if (vari==element)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+
         }
     }
 }
