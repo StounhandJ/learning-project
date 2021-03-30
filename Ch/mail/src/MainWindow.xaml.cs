@@ -23,7 +23,6 @@ namespace mail
         private List<string> filePathList = new List<string>();
 
         SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-        private bool debug = true;
         private static string path_TempDirectory = Directory.GetCurrentDirectory() + "\\Temp";
         private static string path_FilesDirectory = path_TempDirectory+"\\sendFile";
         private static string path_SendRtfFile = path_TempDirectory+"\\sendrtf.rtf";
@@ -42,20 +41,6 @@ namespace mail
             if (Directory.Exists(path_TempDirectory))
             {
                 Directory.Delete(path_TempDirectory, true);
-            }
-            if (debug)
-            {
-                coreForm.Width = 700;
-                EditMailMenu.Visibility = Visibility.Visible;
-                EditMailMenu.IsEnabled = true;
-
-                LoginMenu.Visibility = Visibility.Hidden;
-                LoginMenu.IsEnabled = false;
-                
-                userMail = "tester.mpt@gmail.com";
-                userPassword = "7157725R";
-                
-                toMail.Text = userMail;
             }
         }
 
@@ -196,7 +181,6 @@ namespace mail
                 (sender as BackgroundWorker).ReportProgress(progressPercentage);
                 send_mes("Новое письмо", text, filePathList,(string)vari);
                 send = true;
-                System.Threading.Thread.Sleep(1000);
 
             }
 
