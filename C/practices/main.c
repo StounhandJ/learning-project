@@ -87,7 +87,20 @@ int pr1_5(){
     return 0;
 }
 
+int flip_word(){
+    char str[100];
+    scanf_s("%s", str, 100);
+    int h = 0;
+    while (str[h] != NULL) {
+        h++;
+    }
+    printf("Dlina %d\n", h);
+    for (int i = 0; i < h; ++i) {
+        printf("%c", str[i]);
+    }
+    return 0;
+}
+
 int main(void) {
-    setlocale(LC_ALL, " ");
-    return pr1_1();
+    return flip_word();
 }
