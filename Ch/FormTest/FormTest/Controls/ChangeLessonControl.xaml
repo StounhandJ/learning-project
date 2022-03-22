@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="FormTest.Controls.ChangeLessonControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:FormTest.Controls"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+         <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="7*"/>
+                <RowDefinition Height="7*"/>
+                <RowDefinition Height="7*"/>
+                <RowDefinition Height="7*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Дисциплина:" FontSize="20" Margin="5"/>
+            <TextBlock Grid.Row="2" Grid.Column="2" Text="Название:" FontSize="20" Margin="5"/>
+            <TextBlock Grid.Row="3" Grid.Column="2" Text="Преподаватель:" FontSize="20" Margin="5"/>
+            <TextBlock Grid.Row="4" Grid.Column="2" Text="Группы:" FontSize="20" Margin="5"/>
+            
+            <TextBlock Grid.Row="1" Grid.Column="4" Name="ErrorTextBlock" FontSize="10" TextWrapping="Wrap" TextAlignment="Center" Foreground="Red"/>
+            
+            <ComboBox Grid.Row="2" Grid.Column="1" Name="LessonsComboBox" SelectionChanged="Selector_OnSelectionChanged" Margin="5"/>
+            <TextBox Grid.Row="2" Grid.Column="3" Name="NameTextBox" Margin="5"/>
+            <ComboBox Grid.Row="3" Grid.Column="3" x:Name="TeacherComboBox" Margin="5"/>
+            <xctk:CheckComboBox Grid.Row="4" Grid.Column="3" x:Name="GroupsCheckComboBox" Margin="5"/>
+
+            <Button Grid.Row="3" Grid.Column="4" Name="CreateButton" Content="Создать" Click="CreateButton_OnClick" Margin="5"/>
+            <Button Grid.Row="4" Grid.Column="4" Name="ChangeButton" Content="Изменит" Click="ChangeButton_OnClick" Margin="5"/>
+            <Button Grid.Row="5" Grid.Column="4" Name="DeleteButton" Content="Удалить" Click="DeleteButton_OnClick" Margin="5"/>
+            <Button Grid.Row="5" Grid.Column="3" Name="CancelButton" Content="Отменить выбор" Click="CancelButton_OnClick" Margin="5"/>
+        </Grid>
+</UserControl>

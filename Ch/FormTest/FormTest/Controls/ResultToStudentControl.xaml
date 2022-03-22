@@ -1,0 +1,28 @@
+﻿<UserControl x:Class="FormTest.Controls.ResultToStudentControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:FormTest.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+        
+        <ComboBox Grid.Row="0" Name="FormsComboBox" SelectionChanged="FormsComboBox_OnSelectionChanged" Margin="5"/>
+        
+        <StackPanel Grid.Row="1" Margin="5">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Название: "/>
+                <TextBlock Name="FormNameTextBlock" Margin="5 0 0 0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Баллы: "/>
+                <TextBlock Name="FormResultTextBlock" Margin="5 0 0 0"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,37 @@
+﻿<Page x:Class="FormTest.Page.AdminPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:FormTest.Page"
+      xmlns:controls="clr-namespace:FormTest.Controls"
+      xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+      mc:Ignorable="d"
+      Title="AdminPage" d:Height="450" d:Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+        </Grid.RowDefinitions>
+        <controls:MenuControl Grid.Row="0" Grid.Column="0" IsAdmin="True" 
+                              Exit="Close"
+                              UserMenu="MenuControl_OnUserMenu"
+                              GroupMenu="MenuControl_OnGroupMenu"
+                              LessonMenu="MenuControl_OnLessonMenu"/>
+        
+        <controls:ChangeUserControl Grid.Row="1" x:Name="ChangeUserControl" 
+                                    CreateUser="ChangeUserControl_OnCreateUser"
+                                    ChangeUser="ChangeUserControl_OnChangeUser"
+                                    DeleteUser="ChangeUserControl_OnDeleteUser"/>
+        
+        <controls:ChangeGroupControl Grid.Row="1" x:Name="ChangeGroupControl" 
+                                     CreateGroup="ChangeGroupControl_OnCreateGroup"
+                                     ChangeGroup="ChangeGroupControl_OnChangeGroup"
+                                     DeleteGroup="ChangeGroupControl_OnDeleteGroup"/>
+        
+        <controls:ChangeLessonControl Grid.Row="1" x:Name="ChangeLessonControl" 
+                                     CreateLesson="ChangeLessonControl_OnCreateLesson"
+                                     ChangeLesson="ChangeLessonControl_OnChangeLesson"
+                                     DeleteLesson="ChangeLessonControl_OnDeleteLesson"/>
+    </Grid>
+</Page>

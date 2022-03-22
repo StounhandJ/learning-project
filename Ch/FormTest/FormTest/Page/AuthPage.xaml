@@ -1,0 +1,14 @@
+﻿<Page x:Class="FormTest.Page.AuthPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:FormTest.Page"
+      xmlns:controls="clr-namespace:FormTest.Controls"
+      mc:Ignorable="d"
+      Title="AuthPage" d:Height="450" d:Width="600">
+    <Grid ShowGridLines="True">
+        <controls:LoginControl x:Name="LoginControl"
+                               Login="LoginControl_OnLogin"/>
+     </Grid>
+</Page>
