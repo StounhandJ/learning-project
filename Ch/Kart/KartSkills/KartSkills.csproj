@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="View\Dengi.png" />
+    <None Remove="View\Informatsia.png" />
+    <None Remove="View\Klyuch.png" />
+    <None Remove="View\Shlem.png" />
+    <None Remove="View\UserControll\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Dengi.png" />
+    <Resource Include="Resources\Informatsia.png" />
+    <Resource Include="Resources\Klyuch.png" />
+    <Resource Include="Resources\Shlem.png" />
+    <Resource Include="Resources\logo.png" />
+    <Resource Include="Resources\kart-skill-2017-map-1.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.13">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

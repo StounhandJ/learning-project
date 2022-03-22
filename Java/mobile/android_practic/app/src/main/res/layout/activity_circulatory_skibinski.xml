@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".calc.CirculatorySkibinskiActivity">
+<TextView
+        android:id="@+id/textInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Определяющий резервы и выносливость дыхательной и сердечно-сосудистой систем."
+        android:textAlignment="center"
+        android:textColor="@color/blue"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/editTextGEL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Жизненная емкость легких (мл)"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/textInfo" />
+
+    <EditText
+        android:id="@+id/editTextPH"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Проба Штанге (с)"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/editTextGEL" />
+
+    <EditText
+        android:id="@+id/editTextCSS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Частота сердечных сокращений (уд/мин)"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/editTextPH" />
+
+    <Button
+        android:id="@+id/buttonNext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blue"
+        android:text="Продолжить"
+        app:layout_constraintTop_toBottomOf="@id/editTextCSS" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,54 @@
+﻿<Window x:Class="KartSkills.View.Admin.CreateOrganizationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KartSkills.View.Admin"
+        mc:Ignorable="d"
+        FontFamily="Arial"
+        Title="Kart Skills 2017" Height="560" Width="800"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Loaded="StartWindow_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="#FFB4B4B4">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Kart Skills 2017" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold"/>
+            <TextBlock Grid.Row="1" Text="Москва, Россия 20 июня 2017" HorizontalAlignment="Center" FontSize="18"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <!-- <TextBlock Grid.Row="2" Text="Фонд собак" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22"/> -->
+            <Button Content="Logout" Click="Logout_Click" Margin="674,-68,23,108"/>
+            <TextBlock HorizontalAlignment="Left" FontSize="22" FontWeight="Bold" x:Name="TextName_Copy32" Margin="46,86,0,61" Width="113" Grid.Row="1" RenderTransformOrigin="0.615,-0.616" Grid.RowSpan="2"><Run Language="ru-ru" Text="Описание"/><Run Text=":"/></TextBlock>
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" x:Name="TextName_Copy33" Margin="0,10,0,0" Width="378"><Run Language="ru-ru" Text="   "/><Run Text="Добавление"/><Run Text="/"/><Run Text="Редактирование"/><LineBreak/><Run Text="б"/><Run Text="лаготворительных организаций"/></TextBlock>
+            <Button Content="Сохранить" Click="Back_Click" Margin="197,38,454,10" Grid.Row="4"/>
+            <Button Content="Отмена" Click="Back_Click" Margin="448,34,224,10" Grid.Row="4"/>
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" x:Name="TextName_Copy1" Margin="46,6,0,0" Width="74" Text="Email:" Height="30" Grid.Row="1"/>
+            <TextBox TextWrapping="Wrap" ToolTip="Поиск" Margin="46,48,565,10" Grid.Row="1" />
+            <TextBox TextWrapping="Wrap" ToolTip="Поиск" Margin="46,30,364,53" Grid.Row="2" Grid.RowSpan="3" />
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" x:Name="TextName_Copy" Margin="461,6,0,0" Width="165" Height="30" Grid.Row="1"><Run Language="ru-ru" Text="Логотип файл"/><Run Text=":"/></TextBlock>
+            <TextBox TextWrapping="Wrap" ToolTip="Поиск" Margin="461,48,143,10" Grid.Row="1" />
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" x:Name="TextName_Copy2" Margin="461,0,0,0" Width="234" Height="30" Grid.Row="2"><Run Language="ru-ru" Text="Текущий логотип"/><Run Text=":"/></TextBlock>
+            <Button Content="Просмотр" Margin="662,48,38,10" Grid.Row="1"/>
+            <Image Grid.RowSpan="3" Margin="544,34,92,60" Grid.Row="2" Visibility="Visible" Source="\Resources\logo.png"/>
+
+
+        </Grid>
+        <Grid Grid.Row="2" Background="#FFB4B4B4">
+            <TextBlock x:Name="TextTimer" Text="До начала события осталось:" HorizontalAlignment="Center" FontSize="18"/>
+        </Grid>
+    </Grid>
+</Window>
