@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textmain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Онлайн-калькулятор функционального сотсояния и массы тела"
+        android:textAlignment="center"
+        android:textColor="@color/blue"
+        android:textSize="30dp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/blue"
+        android:text="Продолжить"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageViewGerb"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textmain"
+        app:srcCompat="@mipmap/gerb" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue"
+        android:textSize="30dp"
+        android:text="8 показателей"
+        app:layout_constraintBottom_toTopOf="@+id/imageViewHeart"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewGerb"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textmain" />
+
+    <ImageView
+        android:id="@+id/imageViewHeart"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewAirlogo"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewGerb"
+        app:srcCompat="@mipmap/heart" />
+
+    <TextView
+        android:id="@+id/textPlus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue"
+        android:textSize="60dp"
+        android:text="+"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewAirlogo"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewAirlogo"
+        app:layout_constraintStart_toEndOf="@+id/imageViewHeart"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewGerb" />
+
+    <ImageView
+        android:id="@+id/imageViewAirlogo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageViewGerb"
+        app:srcCompat="@mipmap/airlogo" />
+
+    <TextView
+        android:id="@+id/textPlus2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue"
+        android:textSize="60dp"
+        android:text="+"
+        app:layout_constraintEnd_toEndOf="@+id/textPlus"
+        app:layout_constraintStart_toStartOf="@+id/textPlus"
+        app:layout_constraintTop_toBottomOf="@+id/textPlus" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BMI"
+        android:textColor="@color/red"
+        android:textSize="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="@+id/textPlus2"
+        app:layout_constraintStart_toStartOf="@+id/textPlus2"
+        app:layout_constraintTop_toBottomOf="@+id/textPlus2" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

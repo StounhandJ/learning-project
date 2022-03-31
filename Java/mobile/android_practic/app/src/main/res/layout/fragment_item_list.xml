@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.list.ItemFragment">
+
+    <ImageView
+        android:id="@+id/imageViewGerb"
+        android:layout_width="120dp"
+        android:layout_height="100dp"
+        app:layout_constraintRight_toRightOf="parent"
+
+        app:srcCompat="@mipmap/gerb" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Возраст"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/spinner" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:name="mpt.ru.mar.practic.ui.ItemFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="16dp"
+        app:layoutManager="LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="@+id/editTextAge"
+        app:layout_constraintHorizontal_bias="0.248"
+        app:layout_constraintStart_toStartOf="@id/editTextAge"
+        app:layout_constraintTop_toBottomOf="@id/imageViewGerb"
+        tools:listitem="@layout/fragment_item" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

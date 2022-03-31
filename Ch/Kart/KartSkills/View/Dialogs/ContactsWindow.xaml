@@ -1,0 +1,18 @@
+﻿<Window x:Class="KartSkills.View.Dialogs.ContactsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KartSkills.View.Dialogs"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="Контакты" Height="200" Width="400" ResizeMode="NoResize">
+    <Grid>
+        <TextBlock TextWrapping="Wrap" FontSize="18" Margin="0,35,0,5" Text="Контакты" TextAlignment="Center"/>
+        <TextBlock TextWrapping="Wrap" FontSize="18"  Text="Email" TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" Margin="99,105,0,0"/>
+        <TextBlock TextWrapping="Wrap" FontSize="18"  Text="Телефон" TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="99,0,0,0"/>
+
+        <TextBlock x:Name="TextEmail" TextWrapping="Wrap" FontSize="18"  Text="dkfjksdj@sdfksd.sd" TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="153,104,0,0"/>
+        <TextBlock TextWrapping="Wrap" FontSize="18"  Text="1234567890" TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="180,0,0,0"/>
+    </Grid>
+</Window>

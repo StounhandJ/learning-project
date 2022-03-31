@@ -1,0 +1,26 @@
+﻿<Page x:Class="FormTest.Page.TeacherPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:FormTest.Page"
+      xmlns:controls="clr-namespace:FormTest.Controls"
+      mc:Ignorable="d"
+      Title="TeacherPage" d:Height="450" d:Width="800">
+    <Grid>
+         <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+        </Grid.RowDefinitions>
+        <controls:MenuControl Grid.Row="0" Grid.Column="0" IsTeacher="True" 
+                              Exit="Close"
+                              CreateFormMenu="MenuControl_OnCreateFormMenu"
+                              ShowResultMenu="MenuControl_OnShowResultMenu"/>
+        
+        <controls:FormChangeControl Grid.Row="1" x:Name="FormChangeControl"
+                                    CreateForm="FormChangeControl_OnCreateForm"
+                                    Error="FormChangeControl_OnError"/>
+        
+        <controls:ResultFormControl Grid.Row="1" x:Name="ResultFormControl"/>
+    </Grid>
+</Page>

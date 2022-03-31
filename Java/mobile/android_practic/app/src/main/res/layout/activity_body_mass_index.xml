@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".calc.BodyMassIndexActivity">
+
+    <TextView
+        android:id="@+id/textInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:text="представляет собой значение по оценке степени соответствия массы тела человека и роста (длины тела), в результате определения индекса можно косвенно судить о том, что масса тела находится в пределах нормы или недостаточна или наоборот избыточная масса тела."/>
+
+    <EditText
+        android:id="@+id/editTextHeight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:hint="Ваш рост (см)"
+        app:layout_constraintTop_toBottomOf="@id/textInfo"/>
+
+    <EditText
+        android:id="@+id/editTextWeight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:hint="Ваш вес (кг)"
+        app:layout_constraintTop_toBottomOf="@id/editTextHeight"/>
+
+    <Button
+        android:id="@+id/buttonNext"
+        android:backgroundTint="@color/blue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/editTextWeight"
+        android:text="Продолжить"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

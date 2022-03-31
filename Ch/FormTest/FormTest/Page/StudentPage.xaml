@@ -1,0 +1,26 @@
+﻿<Page x:Class="FormTest.Page.StudentPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:FormTest.Page"
+      xmlns:controls="clr-namespace:FormTest.Controls"
+      mc:Ignorable="d"
+      Title="StudentPage" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+        </Grid.RowDefinitions>
+        <controls:MenuControl Grid.Row="0" Grid.Column="0" IsStudent="True"
+                              Exit="Close"
+                              PassageFormMenu="MenuControl_OnPassageFormMenu"
+                              ShowResultStudentMenu="MenuControl_OnShowResultStudentMenu"/>
+        
+        <controls:FormPassageControl Grid.Row="1" x:Name="FormPassageControl"
+                                     PassageForm="FormPassageControl_OnPassageForm"
+                                     Error="FormPassageControl_OnError"/>
+        
+        <controls:ResultToStudentControl Grid.Row="1" x:Name="ResultToStudentControl"/>
+    </Grid>
+</Page>

@@ -1,0 +1,58 @@
+﻿<Window x:Class="KartSkills.View.Admin.CreateUserWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KartSkills.View.Admin"
+         mc:Ignorable="d"
+        FontFamily="Arial"
+        Title="Kart Skills 2017" Height="560" Width="800"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Loaded="StartWindow_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="#FFB4B4B4">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Kart Skills 2017" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold"/>
+            <TextBlock Grid.Row="1" Text="Москва, Россия 20 июня 2017" HorizontalAlignment="Center" FontSize="18"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" x:Name="TextName" Margin="129,7,0,0" Width="61" Height="30" Grid.Row="1"><Run Language="ru-ru" Text="Имя"/><Run Text=":"/></TextBlock>
+            <!-- <TextBlock Grid.Row="2" Text="Фонд собак" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22"/> -->
+            <Button Content="Назад" Click="Back_Click" Margin="23,-60,674,108"/>
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" x:Name="TextName_Copy31" Margin="74,47,0,0" Width="118" Grid.Row="1"><Run Language="ru-ru" Text="Фамилия"/><Run Text=":"/></TextBlock>
+            <TextBlock HorizontalAlignment="Left" FontSize="22" FontWeight="Bold" x:Name="TextName_Copy32" Margin="120,0,0,61" Width="70" Grid.Row="2" RenderTransformOrigin="0.615,-0.616"><Run Language="ru-ru" Text="Роль"/><Run Text=":"/></TextBlock>
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" x:Name="TextName_Copy33" Margin="0,10,0,0" Width="378"><Run Language="ru-ru" Text="Добавление нового пользователя"/></TextBlock>
+            <Button Content="Сохранить" Click="Back_Click" Margin="197,44,454,4" Grid.Row="3"/>
+            <Button Content="Отмена" Click="Back_Click" Margin="450,44,222,0" Grid.Row="3"/>
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" x:Name="TextName_Copy1" Margin="118,53,0,0" Width="74" Text="Email:" Height="30"/>
+            <TextBox TextWrapping="Wrap" ToolTip="Поиск" Margin="197,7,441,51" Grid.Row="1" />
+            <TextBox TextWrapping="Wrap" ToolTip="Поиск" Margin="197,45,441,15" Grid.Row="1" />
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" x:Name="TextName_Copy" Margin="497,54,0,0" Width="92" Height="30"><Run Language="ru-ru" Text="Пароль"/><Run Text=":"/></TextBlock>
+            <TextBox TextWrapping="Wrap" ToolTip="Поиск" Margin="596,54,42,4" />
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" x:Name="TextName_Copy2" Margin="380,6,0,0" Width="234" Height="30" Grid.Row="1" Text="Повторите пароль:"/>
+            <TextBox TextWrapping="Wrap" ToolTip="Поиск" Margin="596,6,42,52" Grid.Row="1" />
+
+
+        </Grid>
+        <Grid Grid.Row="2" Background="#FFB4B4B4">
+            <TextBlock x:Name="TextTimer" Text="До начала события осталось:" HorizontalAlignment="Center" FontSize="18"/>
+        </Grid>
+        <ComboBox Name="RoleComboBox" Margin="193,178,444,229" Grid.Row="1"/>
+
+        <TextBlock TextWrapping="Wrap" Text="Email@addres.ru" FontSize="18" Margin="193,54,444,349" Grid.Row="1"/>
+    </Grid>
+</Window>
