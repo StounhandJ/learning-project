@@ -1,0 +1,6 @@
+com/example/workwithsqlite/BuildConfig.java
+ com.example.workwithsqlite.BuildConfig
+com/example/workwithsqlite/MainActivity.java
+ com.example.workwithsqlite.MainActivity
+com/example/workwithsqlite/DatabaseHelper.java
+ com.example.workwithsqlite.DatabaseHelper
