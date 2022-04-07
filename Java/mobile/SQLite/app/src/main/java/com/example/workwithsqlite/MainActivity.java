@@ -38,14 +38,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        insert.setOnClickListener(view -> {
-            Boolean checkInsertData = dataBaseHelper.insert(name.getText().toString(), phone.getText().toString(), dateOfBirth.getText().toString());
-            if (checkInsertData) {
-                Toast.makeText(getApplicationContext(), "Данные успешно добавлены", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getApplicationContext(), "Произошла ошибка", Toast.LENGTH_LONG).show();
-            }
-        });
+            insert.setOnClickListener(view -> {
+                Boolean checkInsertData = dataBaseHelper.insert(name.getText().toString(), phone.getText().toString(), dateOfBirth.getText().toString());
+                if (checkInsertData) {
+                    Toast.makeText(getApplicationContext(), "Данные успешно добавлены", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Произошла ошибка", Toast.LENGTH_LONG).show();
+                }
+            });
 
         update.setOnClickListener(view -> {
             Boolean checkInsertData = dataBaseHelper.update(name.getText().toString(), phone.getText().toString(), dateOfBirth.getText().toString());
