@@ -2,44 +2,53 @@ package mpt.ru.mar.news;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    CheckBox is_admin;
-    EditText name, password;
-    Button reg, log;
-    DatabaseHelper dataBaseHelper;
+    EditText txtLogin, txtPassword;
+    DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        reg = findViewById(R.id.btnReg);
-        log = findViewById(R.id.btnLog);
-        name = findViewById(R.id.txtName);
-        password = findViewById(R.id.txtPassword);
-        is_admin = findViewById(R.id.isAdmin);
-        dataBaseHelper = new DatabaseHelper(this);
+        initialize();
+    }
 
+    private void initialize() {
+        txtLogin = findViewById(R.id.txtLogin);
+        txtPassword = findViewById(R.id.txtPassword);
+        databaseHelper = new DatabaseHelper(this);
+    }
 
-        reg.setOnClickListener(view -> {
-            Boolean checkInsertData = dataBaseHelper.insertUser(name.getText().toString(), password.getText().toString(), is_admin.isChecked()?1:0);
-        });
-
-        log.setOnClickListener(view -> {
-            Cursor res = dataBaseHelper.getUserByLoginPassword(name.getText().toString(), password.getText().toString());
-            if (res.getCount() != 1) {
-                Toast.makeText(getApplicationContext(), "Нет данных", Toast.LENGTH_LONG).show();
-                return;
+    public void enterClick(View view) {
+        Intent intent = new Intent(this, AllNewsActivityAdministrator.class);
+        Cursor res = databaseHelper.getData(txtLogin.getText().toString().trim(), txtPassword.getText().toString().trim());
+        if (res.getCount() == 0) {
+            Toast.makeText(this, "Неверный логин или пароль", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        while (res.moveToNext()) {
+            if (res.getString(3).equals("Администратор")) {
+                intent.putExtra("Id", res.getInt(0));
+                startActivity(intent);
+            } else {
+                startActivity(new Intent(this, AllNewsActivity.class));
             }
-            res.moveToNext();
-            int is_admin = res.getInt(2);
-            Toast.makeText(getApplicationContext(), "Логин "+res.getString(0), Toast.LENGTH_LONG).show();
-        });
+        }
+    }
+
+    public void registrationClick(View view) {
+        startActivity(new Intent(this, RegistrationActivity.class));
     }
 }

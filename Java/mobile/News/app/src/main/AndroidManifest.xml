@@ -10,8 +10,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.News">
         <activity
+            android:name=".AllNewsActivityAdministrator"
+            android:exported="false" />
+        <activity
+            android:name=".UpdateNewsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegistrationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NewsInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddNewsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AllNewsActivity"
+            android:exported="false" />
+        <activity
             android:name=".SplashActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,9 +38,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false" />
     </application>
 
 </manifest>

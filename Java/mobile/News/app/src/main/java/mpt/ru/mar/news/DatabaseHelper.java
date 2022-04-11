@@ -1,87 +1,85 @@
 package mpt.ru.mar.news;
 
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import androidx.annotation.Nullable;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public SQLiteDatabase DB;
-
-    public DatabaseHelper(Context context) {
-        super(context, "Userdata.db", null, 1);
-        DB = this.getWritableDatabase();
+    public DatabaseHelper(@Nullable Context context) {
+        super(context, "News1.db", null, 1);
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create Table UserInfo(name TEXT primary key, password TEXT, is_admin INTEGER)");
-        db.execSQL("create Table NewsInfo(name TEXT, date_created TEXT primary key)");
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        sqLiteDatabase.execSQL("create Table Users( IDUser Integer PRIMARY KEY AUTOINCREMENT, Login Text, Password Text, Role Text)");
+        sqLiteDatabase.execSQL("create Table News(" +
+                "IdNews Integer PRIMARY KEY AUTOINCREMENT, Title Text, Content Text, DateOfPublication Text, UserID Integer, FOREIGN KEY(UserID) REFERENCES Users(IDUser))");
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop Table if exists UserInfo");
-        db.execSQL("drop Table if exists NewsInfo");
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+        sqLiteDatabase.execSQL("drop Table if exists Users");
+        sqLiteDatabase.execSQL("drop Table if exists News");
     }
 
-    public Boolean insertUser(String name, String phone, Integer is_admin) {
+    public Boolean insertUser(String login, String password, String role) {
+        SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("name", name);
-        contentValues.put("password", phone);
-        contentValues.put("is_admin", is_admin);
-        long result = DB.insert("UserInfo", null, contentValues);
+        contentValues.put("Login", login);
+        contentValues.put("Password", password);
+        contentValues.put("Role", role);
+        long result = DB.insert("Users", null, contentValues);
         return result != -1;
     }
 
-    public Cursor getUsers() {
-        return DB.rawQuery("Select * from UserInfo", null);
-    }
-
-    public Cursor getUserByLoginPassword(String name, String password) {
-
-        return DB.rawQuery("Select * from UserInfo where name='"+name+"' and password='"+password+"'", null);
-    }
-
-    public Boolean deleteUser(String name) {
-        long result = DB.delete("UserInfo", "name = '" + name + "'", null);
-        return result != -1;
-    }
-
-    public Boolean updateUser(String name, String phone, String date_of_birth) {
-//        ContentValues contentValues = new ContentValues();
-//        contentValues.put("phone", phone);
-//        contentValues.put("date_of_birth", date_of_birth);
-//        long result = DB.update("UserInfo", contentValues, "name=?", new String[]{name});
-//        return result != -1;
-        return false;
-    }
-
-    public Boolean insertNews(String name, String date_created) {
+    public void insertNews(String title, String content, String dateOfPublication, int userID) {
+        SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("name", name);
-        contentValues.put("date_created", date_created);
-        long result = DB.insert("NewsInfo", null, contentValues);
-        return result != -1;
+        contentValues.put("Title", title);
+        contentValues.put("Content", content);
+        contentValues.put("DateOfPublication", dateOfPublication);
+        contentValues.put("UserID", userID);
+        DB.insert("News", null, contentValues);
     }
 
-    public Cursor getNews() {
-        return DB.rawQuery("Select * from NewsInfo", null);
-    }
-
-    public Boolean deleteNews(String date_created) {
-        long result = DB.delete("NewsInfo", "name = '" + date_created + "'", null);
-        return result != -1;
-    }
-
-    public Boolean updateNews(String date_created, String name) {
+    public void updateNews(int idNews, String title, String content, String dateOfPublication, int userID) {
+        SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("name", name);
-        long result = DB.update("NewsInfo", contentValues, "date_created=?", new String[]{date_created});
-        return result != -1;
+        contentValues.put("Title", title);
+        contentValues.put("Content", content);
+        contentValues.put("DateOfPublication", dateOfPublication);
+        contentValues.put("UserID", userID);
+        DB.update("News", contentValues, "IdNews=?", new String[]{Integer.toString(idNews)});
+    }
+
+    public void deleteNews(int idNews) {
+        SQLiteDatabase DB = this.getWritableDatabase();
+        DB.delete("News", "IdNews=?", new String[]{Integer.toString(idNews)});
+    }
+
+    public Cursor getData(String login, String password) {
+        SQLiteDatabase DB = this.getWritableDatabase();
+        return DB.rawQuery("Select * from Users where Login = '" + login +
+                "' and Password = '" + password + "' LIMIT 1", null);
+    }
+
+    public Cursor getData(int idUser) {
+        SQLiteDatabase DB = this.getWritableDatabase();
+        return DB.rawQuery("Select * from Users where IDUser = '" + idUser + "'", null);
+    }
+
+    public Cursor getNewsData() {
+        SQLiteDatabase DB = this.getWritableDatabase();
+        return DB.rawQuery("Select * from News", null);
+    }
+
+    public Cursor getNewsData(int idNews) {
+        SQLiteDatabase DB = this.getWritableDatabase();
+        return DB.rawQuery("Select * from News where IdNews = '" + idNews + "'", null);
     }
 }
-
