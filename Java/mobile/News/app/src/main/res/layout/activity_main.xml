@@ -53,4 +53,15 @@
         android:onClick="registrationClick"
         android:id="@+id/btnRegistration"/>
 
+    <Button
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:text="По отпечатку"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnRegistration"
+        android:layout_marginTop="30sp"
+        android:onClick="btnTouchClick"
+        android:id="@+id/btnTouch"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

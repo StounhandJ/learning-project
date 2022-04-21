@@ -1,28 +1,62 @@
 package mpt.ru.mar.news;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.annotation.NonNull;
+import androidx.biometric.BiometricPrompt;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity {
     EditText txtLogin, txtPassword;
     DatabaseHelper databaseHelper;
+
+    Executor executor;
+    BiometricPrompt biometricPrompt;
+    BiometricPrompt.PromptInfo promptInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initialize();
+
+        executor = ContextCompat.getMainExecutor(this);
+        AppCompatActivity active = this;
+
+        biometricPrompt = new BiometricPrompt(MainActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                Log.e("ErrorAUTH", errString.toString());
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                startActivity(new Intent(active, AllNewsActivity.class));
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                Log.e("FailedAUTH", "FAIL!!!");
+            }
+        });
+
+        promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Авторизация")
+                .setSubtitle("Прислоните палец")
+                .setNegativeButtonText("Отмена")
+                .build();
     }
 
     private void initialize() {
@@ -50,5 +84,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void registrationClick(View view) {
         startActivity(new Intent(this, RegistrationActivity.class));
+    }
+
+    public void btnTouchClick(View view) {
+        biometricPrompt.authenticate(promptInfo);
     }
 }
